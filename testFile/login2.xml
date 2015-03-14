@@ -2,7 +2,7 @@
 <result>
 	<host>http://web.aria.fr</host>
 	<url>awa/destination/ARIAVIEW</url>
-	<datefile>date.xml</datefile>
+	<datefile>dates.xml</datefile>
 	<model>RESULT</model>
 	<site>JUAREZ</site>
 	<nest>LcS</nest>

@@ -26,6 +26,7 @@ public final class R {
         public static final int login=0x7f040001;
         public static final int loginHint=0x7f040002;
         public static final int passwordHint=0x7f040003;
+        public static final int siteDialogTxt=0x7f040004;
     }
     public static final class style {
         /** 
