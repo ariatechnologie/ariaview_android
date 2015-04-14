@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -117,14 +118,11 @@ public class MainActivity extends Activity {
 	}
 	
 	private void authen(int choice){
-
-		System.out.println(sitesTab[choice]);
-		
 		//SEND LOGIN 2
 		
 		DownloadTask downloadTask = new DownloadTask(MainActivity.this);
 		downloadTask.execute(UrlTest+login2XML);
-				
+		
 		File fileXML = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath()+"/AriaView/", login2XML);
 		
@@ -140,15 +138,15 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		host = document.getElementById("host").getTextContent();
-		url = document.getElementById("url").getTextContent();
-		datefile = document.getElementById("datefile").getTextContent();
-		model = document.getElementById("model").getTextContent();
-		site = document.getElementById("site").getTextContent();
-		nest = document.getElementById("nest").getTextContent();
-		
-		
-		downloadTask.execute(host+"/"+url+"/"+site+"/GEARTH/"+model+"_"+nest+"/"+datefile);
+		host = document.getElementsByTagName("host").item(0).getTextContent();
+		url = document.getElementsByTagName("url").item(0).getTextContent();
+		datefile = document.getElementsByTagName("datefile").item(0).getTextContent();
+		model = document.getElementsByTagName("model").item(0).getTextContent();
+		site = document.getElementsByTagName("site").item(0).getTextContent();
+		nest = document.getElementsByTagName("nest").item(0).getTextContent();
+				
+		DownloadTask downloadTaskDateFile = new DownloadTask(MainActivity.this);
+		downloadTaskDateFile.execute(host+"/"+url+"/"+site+"/GEARTH/"+model+"_"+nest+"/"+datefile);
 				
 		fileXML = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath()+"/AriaView/", datefile);
