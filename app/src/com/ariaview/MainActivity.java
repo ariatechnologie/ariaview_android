@@ -1,17 +1,13 @@
 package com.ariaview;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -151,6 +147,17 @@ public class MainActivity extends Activity {
 		fileXML = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath()+"/AriaView/", datefile);
 		
+		try {
+			Document document_datefile = constructeur.parse(fileXML);
+
+			String last_date = document_datefile.getElementsByTagName("name").item(document_datefile.getElementsByTagName("name").getLength()-1).getTextContent();
+		
+			
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 }
