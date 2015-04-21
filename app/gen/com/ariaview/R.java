@@ -14,15 +14,21 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int loginButton=0x7f060002;
-        public static final int loginTxt=0x7f060000;
-        public static final int passwordTxt=0x7f060001;
+        public static final int checkBox1=0x7f060005;
+        public static final int loginButton=0x7f060006;
+        public static final int loginTxt=0x7f060002;
+        public static final int passwordTxt=0x7f060004;
+        public static final int textView1=0x7f060000;
+        public static final int textView2=0x7f060001;
+        public static final int textView3=0x7f060003;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
     }
     public static final class string {
+        public static final int CheckBox=0x7f040006;
         public static final int app_name=0x7f040000;
+        public static final int logScreen=0x7f040005;
         public static final int login=0x7f040001;
         public static final int loginHint=0x7f040002;
         public static final int passwordHint=0x7f040003;

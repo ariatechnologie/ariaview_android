@@ -2,15 +2,20 @@ package com.ariaview;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import modele.User;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import BDD.AriaViewBDD;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -22,12 +27,22 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+
+	private AriaViewBDD ariaViewBDD;
+	private User currentUser;
+	private List<User> users;
+	private boolean remember;
+	
+	private EditText login_edit;
+	private EditText password_edit;
+	
 	private String UrlTest = "https://raw.githubusercontent.com/ariatechnologie/ariaview_android/master/testFile/";
 	private String login1XML = "login.xml";
 	private String login2XML = "login2.xml";
@@ -57,13 +72,32 @@ public class MainActivity extends Activity {
 		
 		fabrique = DocumentBuilderFactory.newInstance();
 		
-		Button btn = (Button) findViewById(R.id.loginButton);
+		ariaViewBDD = new AriaViewBDD(this);
+		ariaViewBDD.open();
+		users = ariaViewBDD.getUser();
+		ariaViewBDD.close();
+		
+		login_edit = (EditText) findViewById(R.id.loginTxt);
+		password_edit = (EditText) findViewById(R.id.passwordTxt);
+		
+		if(users.size()>0){
+			currentUser = users.get(0);	
+			login_edit.setText(currentUser.getLogin());
+			password_edit.setText(currentUser.getPassword());
+			((CheckBox) findViewById(R.id.checkBox1)).setChecked(true);
+		}else
+			currentUser = new User();
 		
 	}
 	
 	
 	public void onClickLogin(View v) throws SAXException, IOException{
 
+		CheckBox check_box_remember = (CheckBox) findViewById(R.id.checkBox1);
+		
+		remember = check_box_remember.isChecked();
+		
+		
 		//SEND LOGIN 1
 		
 		final DownloadTask downloadTask = new DownloadTask(MainActivity.this);
@@ -116,6 +150,21 @@ public class MainActivity extends Activity {
 	private void authen(int choice){
 		//SEND LOGIN 2
 		
+		ariaViewBDD.open();
+		ariaViewBDD.clearUser();
+		
+		if(remember){
+			currentUser.setLogin(((EditText) findViewById(R.id.loginTxt)).getText().toString());
+			currentUser.setPassword(((EditText) findViewById(R.id.passwordTxt)).getText().toString());
+			currentUser.setSite(sitesTab[choice]);
+			
+			System.out.println(currentUser);
+			ariaViewBDD.insertUser(currentUser);
+		}
+
+		ariaViewBDD.close();
+		
+		
 		DownloadTask downloadTask = new DownloadTask(MainActivity.this);
 		downloadTask.execute(UrlTest+login2XML);
 		
@@ -147,17 +196,23 @@ public class MainActivity extends Activity {
 		fileXML = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath()+"/AriaView/", datefile);
 		
+		String last_date = "";
+		
 		try {
 			Document document_datefile = constructeur.parse(fileXML);
 
-			String last_date = document_datefile.getElementsByTagName("name").item(document_datefile.getElementsByTagName("name").getLength()-1).getTextContent();
+			last_date = document_datefile.getElementsByTagName("name").item(document_datefile.getElementsByTagName("name").getLength()-1).getTextContent();
 		
+			DownloadTask downloadTask_kml = new DownloadTask(MainActivity.this);
+			downloadTask_kml.execute(UrlTest+last_date+".kml");
 			
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	
+		File fileKML = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/AriaView/", last_date+".kml");
 		
 	}
 }
