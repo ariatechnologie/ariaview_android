@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		ariaDirectory = new File("/sdcard/AriaView/");
+		ariaDirectory = new File(getFilesDir(),"AriaView");
 		ariaDirectory.mkdirs();
 		
 		fabrique = DocumentBuilderFactory.newInstance();
@@ -102,9 +102,8 @@ public class MainActivity extends Activity {
 		
 		final DownloadTask downloadTask = new DownloadTask(MainActivity.this);
 		downloadTask.execute(UrlTest+login1XML);
-				
-		File fileXML = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath()+"/AriaView/", login1XML);
+		System.out.println(ariaDirectory);
+		File fileXML = new File(ariaDirectory, login1XML);
 		
 		
 		try {
@@ -168,8 +167,7 @@ public class MainActivity extends Activity {
 		DownloadTask downloadTask = new DownloadTask(MainActivity.this);
 		downloadTask.execute(UrlTest+login2XML);
 		
-		File fileXML = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath()+"/AriaView/", login2XML);
+		File fileXML = new File(ariaDirectory, login2XML);
 		
 		
 		try {
@@ -193,8 +191,7 @@ public class MainActivity extends Activity {
 		DownloadTask downloadTaskDateFile = new DownloadTask(MainActivity.this);
 		downloadTaskDateFile.execute(host+"/"+url+"/"+site+"/GEARTH/"+model+"_"+nest+"/"+datefile);
 				
-		fileXML = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath()+"/AriaView/", datefile);
+		fileXML = new File(ariaDirectory, datefile);
 		
 		String last_date = "";
 		
@@ -212,7 +209,7 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 	
-		File fileKML = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/AriaView/", last_date+".kml");
+		File fileKML = new File(ariaDirectory, last_date+".kml");
 		
 	}
 }
