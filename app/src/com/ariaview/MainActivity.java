@@ -1,11 +1,7 @@
 package com.ariaview;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -33,13 +29,9 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -55,12 +47,10 @@ public class MainActivity extends Activity {
 	private EditText loginEditText;
 	private EditText passwordEditText;
 	
-	private String UrlTest = "https://raw.githubusercontent.com/ariatechnologie/ariaview_android/master/testFile/";
 	private String url_ws_login = "http://web.aria.fr/webservices/ARIAVIEW/login.php";
 	private String url_ws_infosite = "http://web.aria.fr/webservices/ARIAVIEW/infosite.php";
 	private String login1XML = "login.xml";
 	private String login2XML = "login2.xml";
-	private String datesXML = "dates.xml";
 	
 	private String host;
 	private String url;
@@ -107,6 +97,12 @@ public class MainActivity extends Activity {
 	
 	public void onClickLogin(View v) throws SAXException, IOException{
 
+		if(!checkDeviceConnected())
+		{
+			Toast.makeText(MainActivity.this,getResources().getString(R.string.not_network), Toast.LENGTH_LONG).show();
+			return;
+		}
+		
 		CheckBox checkBoxRemember = (CheckBox) findViewById(R.id.checkBox1);
 		
 		userRemember = checkBoxRemember.isChecked();
@@ -166,6 +162,13 @@ public class MainActivity extends Activity {
 	}
 	
 	private void authen(int choice){
+		
+		if(!checkDeviceConnected())
+		{
+			Toast.makeText(MainActivity.this,getResources().getString(R.string.not_network), Toast.LENGTH_LONG).show();
+			return;
+		}
+		
 		//SEND LOGIN 2
 		
 		ariaViewBDD.open();
