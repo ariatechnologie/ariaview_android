@@ -10,6 +10,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
@@ -55,5 +57,42 @@ public class MapActivity extends Activity {
         super.onResume();
         initilizeMap();
     }
+    
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+	    	case R.id.menu_date:
+	    		Toast.makeText(MapActivity.this,
+						getResources().getString(R.string.title_menu_date),
+						Toast.LENGTH_LONG).show();
+	    		return true;
+	    	case R.id.menu_polluant:
+	    		Toast.makeText(MapActivity.this,
+						getResources().getString(R.string.title_menu_polluant),
+						Toast.LENGTH_LONG).show();
+
+	    		return true;
+	    	case R.id.menu_site:
+	    		Toast.makeText(MapActivity.this,
+						getResources().getString(R.string.title_menu_site),
+						Toast.LENGTH_LONG).show();
+		    		
+	    		return true;
+	    	case R.id.menu_deco:
+	    		finish();
+	    		return true;
+	    	default:
+	    		return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+    
  
 }

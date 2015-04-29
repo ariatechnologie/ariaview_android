@@ -260,7 +260,7 @@ public class MainActivity extends Activity {
 			File fileKML = new File(ariaDirectory, lastDate + ".kml");
 
 			intent = new Intent(this, MapActivity.class);
-			// startActivity(intent);
+			startActivity(intent);
 
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();

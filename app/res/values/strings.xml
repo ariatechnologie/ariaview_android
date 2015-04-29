@@ -12,6 +12,10 @@
     <string name="not_login_and_password">Login and password is missing.</string>
     <string name="not_password">Password is missing.</string>
     <string name="not_login">Login is missing.</string>
-    <string name="not_correct_iden">Login or password you entered is incorrect.</string>
+    <string name="not_correct_iden">Login or password you entered is incorrect.</string> 
+    <string name="title_menu_date">Change date</string>
+    <string name="title_menu_polluant">Change polluant</string>
+    <string name="title_menu_site">Change site</string>
+    <string name="title_menu_deco">Disconnection</string>
     
 </resources>
