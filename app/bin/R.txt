@@ -172,7 +172,11 @@ int string decline 0x7f060003
 int string logScreen 0x7f06002b
 int string login 0x7f060027
 int string loginHint 0x7f060028
+int string not_correct_iden 0x7f060031
+int string not_login 0x7f060030
+int string not_login_and_password 0x7f06002e
 int string not_network 0x7f06002d
+int string not_password 0x7f06002f
 int string passwordHint 0x7f060029
 int string siteDialogTxt 0x7f06002a
 int string store_picture_message 0x7f060001

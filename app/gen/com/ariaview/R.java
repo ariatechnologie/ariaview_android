@@ -626,7 +626,11 @@ containing a value of this type.
         public static final int logScreen=0x7f06002b;
         public static final int login=0x7f060027;
         public static final int loginHint=0x7f060028;
+        public static final int not_correct_iden=0x7f060031;
+        public static final int not_login=0x7f060030;
+        public static final int not_login_and_password=0x7f06002e;
         public static final int not_network=0x7f06002d;
+        public static final int not_password=0x7f06002f;
         public static final int passwordHint=0x7f060029;
         public static final int siteDialogTxt=0x7f06002a;
         public static final int store_picture_message=0x7f060001;
