@@ -6,6 +6,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
@@ -42,7 +43,14 @@ public class MapActivity extends Activity {
     private void initilizeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
- 
+
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().
+            		target(new LatLng(31.621, -106.479)).zoom(12).build();
+   
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    
+            
             // check if map is created successfully or not
             if (googleMap == null) {
                 Toast.makeText(getApplicationContext(),
