@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AriaView</string>
+    <string name="login">Login</string>
+    <string name="loginHint">Login</string>
+    <string name="passwordHint">Password</string>
+    <string name="siteDialogTxt">Sites : </string>
+    <string name="logScreen">Login Screen</string>
+    <string name="CheckBox">Remember me</string>
+    <string name="not_network">AriaView failed to connect. Please check your Internet connection.</string>
+    <string name="not_login_and_password">Login and password is missing.</string>
+    <string name="not_password">Password is missing.</string>
+    <string name="not_login">Login is missing.</string>
+    <string name="not_correct_iden">Login or password you entered is incorrect.</string> 
+    <string name="title_menu_date">Change date</string>
+    <string name="title_menu_polluant">Change polluant</string>
+    <string name="title_menu_site">Change site</string>
+    <string name="title_menu_deco">Disconnection</string>
+    
+</resources>

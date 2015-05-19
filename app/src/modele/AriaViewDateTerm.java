@@ -1,7 +1,13 @@
 package modele;
 
-public class AriaViewDateTerm {
+import java.io.Serializable;
 
+public class AriaViewDateTerm implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String beginTimeSpan;
 	private String endTimeSpan;
 	private String iconPath;

@@ -10,11 +10,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import modele.AriaViewDate;
+import modele.AriaViewDateTerm;
 import modele.User;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -40,7 +43,8 @@ public class MainActivity extends Activity {
 	private User currentUser;
 	private List<User> listUser;
 	private boolean userRemember;
-
+	private AriaViewDate ariaViewDate;
+	
 	private Intent intent;
 
 	private EditText loginEditText;
@@ -126,7 +130,7 @@ public class MainActivity extends Activity {
 			PostTask postTask = new PostTask(MainActivity.this, nameValuePairs,
 					login1XML);
 			postTask.execute(url_ws_login).get();
-
+			
 			if(fileXML.isFile()){
 				documentBuilder = documentBuilderFactory.newDocumentBuilder();
 				document = documentBuilder.parse(fileXML);
@@ -138,9 +142,19 @@ public class MainActivity extends Activity {
 					sitesTabString[i] = sitesNodeList.item(i).getTextContent();
 				}
 	
-				if(!isNewUser())
-					authen(currentUser.getSite());
-				else	
+				boolean siteFind = false;
+				if(!isNewUser()){
+					int i = 0;
+					while(i<sitesTabString.length && !siteFind)
+					{
+						if(currentUser.getSite().equals(sitesTabString[i])){
+							authen(i);
+							siteFind = true;
+						}
+						i++;
+					}
+				}	
+				if(!siteFind)
 					dialogSite(sitesTabString);
 			}else{
 				Toast.makeText(MainActivity.this,
@@ -167,7 +181,7 @@ public class MainActivity extends Activity {
 
 			public void onClick(DialogInterface dialog, int which) {
 				
-				authen(sitesTabString[which]);
+				authen(which);
 				dialog.dismiss();
 			}
 
@@ -177,8 +191,10 @@ public class MainActivity extends Activity {
 
 	}
 
-	private void authen(String choiceSite) {
+	private void authen(int currentSite) {
 
+		String choiceSite = sitesTabString[currentSite];
+				
 		if (!checkDeviceConnected()) {
 			Toast.makeText(MainActivity.this,
 					getResources().getString(R.string.not_network),
@@ -242,24 +258,37 @@ public class MainActivity extends Activity {
 
 			fileXML = new File(ariaDirectory, datefile);
 
-			String lastDate = "";
-
 			Document documentDateFile = documentBuilder.parse(fileXML);
 
-			lastDate = documentDateFile
-					.getElementsByTagName("name")
-					.item(documentDateFile.getElementsByTagName("name")
-							.getLength() - 1).getTextContent();
+			
+			NodeList dateNodeList = documentDateFile.getElementsByTagName("name");
+			
+			ArrayList<String> listDate = new ArrayList<String>();
+			
+			for (int i = 1; i < dateNodeList.getLength(); i++) {
+				listDate.add(((Element) dateNodeList.item(i)).getTextContent());   
+	        }
+			
+			String lastDate = listDate.get(listDate.size()-1);
 
 			DownloadTask downloadTaskKml = new DownloadTask(MainActivity.this);
-			downloadTaskKml.execute(
-					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-							+ nest + "/" + lastDate + "/" + lastDate + ".kml")
+			downloadTaskKml.execute(host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
+					+ nest + "/" + lastDate + "/" + lastDate + ".kml")
 					.get();
 
 			File fileKML = new File(ariaDirectory, lastDate + ".kml");
-
+			fillAriaViewDate(fileKML, host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
+					+ nest + "/" + lastDate + "/");
+			
+				
+			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/" + model + "_"+ nest + "/",listDate.size()-1,currentSite,listDate, sitesTabString, nameValuePairs.get(0).getValue(),nameValuePairs.get(1).getValue());
+			
+			//ariaViewDate.fillAriaViewDate(fileKML);
+						
 			intent = new Intent(this, MapActivity.class);
+			intent.putExtra("AriaViewDate", ariaViewDate);
+			intent.putExtra("fileKML", fileKML);
+			
 			startActivity(intent);
 
 		} catch (ParserConfigurationException e) {
@@ -274,6 +303,48 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void fillAriaViewDate(File fileKML, String hostPath){
+		try {
+
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			document = documentBuilder.parse(fileKML);
+
+			Double north  = Double.parseDouble(document.getElementsByTagName("north").item(0)
+					.getTextContent());
+			Double south = Double.parseDouble(document.getElementsByTagName("south").item(0)
+					.getTextContent());
+			Double east = Double.parseDouble(document.getElementsByTagName("east").item(0)
+					.getTextContent());
+			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
+					.getTextContent());
+			String legendPath = document.getElementsByTagName("href").item(0)
+					.getTextContent();
+			
+			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
+			NodeList endTimeNodeList = document.getElementsByTagName("end");
+			NodeList iconPathNodeList = document.getElementsByTagName("href");
+			
+			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
+			
+			for (int i = 0; i < beginTimeNodeList.getLength(); i++) {
+	            String beginTimeSpan = ((Element) beginTimeNodeList.item(i)).getTextContent();
+	            String endTimeSpan = ((Element) endTimeNodeList.item(i)).getTextContent();
+	            String iconPath = ((Element) iconPathNodeList.item(i+1)).getTextContent();
+	            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, ""));   
+	        }
+			
+			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath,legendPath);
+			ariaViewDate.setListAriaViewDateTerm(listAriaViewDateTerm);
+			
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"  >
  
+    <LinearLayout 
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+ 	android:layout_weight="1" >
+    
+        
+	    <Button
+	        android:id="@+id/decrementDateButton"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+ 			android:layout_weight="1"
+	        android:text="@string/decrementDate" 
+	        android:onClick="decrementDate"
+	        />
+	     
+	    <Spinner
+	        android:id="@+id/spinnerDate"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+			android:layout_weight="5" />
+	    
+	     <Button
+	        android:id="@+id/incrementDateButton"
+	        android:layout_width="0dp" 
+	        android:layout_height="wrap_content"
+ 			android:layout_weight="1"
+	        android:text="@string/incrementDate"
+	        android:onClick="incrementDate" />
+	    
+     
+	</LinearLayout>
+	
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
- 
-</RelativeLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="7" />
+    
+</LinearLayout>

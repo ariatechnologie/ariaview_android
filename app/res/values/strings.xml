@@ -6,6 +6,7 @@
     <string name="loginHint">Login</string>
     <string name="passwordHint">Password</string>
     <string name="siteDialogTxt">Sites : </string>
+    <string name="dateDialogTxt">Dates : </string>
     <string name="logScreen">Login Screen</string>
     <string name="CheckBox">Remember me</string>
     <string name="not_network">AriaView failed to connect. Please check your Internet connection.</string>
@@ -17,5 +18,7 @@
     <string name="title_menu_polluant">Change polluant</string>
     <string name="title_menu_site">Change site</string>
     <string name="title_menu_deco">Disconnection</string>
+    <string name="decrementDate">-</string>
+    <string name="incrementDate">+</string>
     
 </resources>
