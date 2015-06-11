@@ -2,6 +2,7 @@ package modele;
 
 import java.io.Serializable;
 
+//Model Term clouds releases
 public class AriaViewDateTerm implements Serializable{
 
 	/**

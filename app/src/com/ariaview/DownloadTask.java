@@ -9,12 +9,12 @@ import java.net.URL;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.PowerManager;
 
+//Download asynchronously according to the given URL. 
+//Stock the file in the internal memory
 class DownloadTask extends AsyncTask<String, Integer, String> {
 
     private Context context;
-    private PowerManager.WakeLock mWakeLock;
 
     public DownloadTask(Context context) {
         this.context = context;
@@ -52,7 +52,6 @@ class DownloadTask extends AsyncTask<String, Integer, String> {
                 // allow canceling with back button
                 if (isCancelled()) {
                     input.close();
-                    return null;
                 }
                 total += count;
                 // publishing the progress....

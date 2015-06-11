@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AriaView</string>
+    <string name="login">Entrar</string>
+    <string name="loginHint">Entrar</string>
+    <string name="passwordHint">Senha</string>
+    <string name="siteDialogTxt">Locais : </string>
+    <string name="dateDialogTxt">Datas : </string>
+    <string name="logScreen">Tela de login</string>
+    <string name="CheckBox">Memorizar</string>
+    <string name="not_network">AriaView falhou ao conectar. Por favor, verifique sua conexão com a Internet.</string>
+    <string name="not_login_and_password">Login and password is missing.</string>
+    <string name="not_password">Faça login e senha está faltando.</string>
+    <string name="not_login">Entrar está faltando.</string>
+    <string name="not_correct_iden">Login ou senha está incorreta Você entrou.</string> 
+    <string name="title_menu_date">Mudança de data</string>
+    <string name="title_menu_polluant">Mudança polluant</string>
+    <string name="title_menu_site">Mudança site</string>
+    <string name="title_menu_deco">Desconexão</string>
+    <string name="title_menu_language">Língua</string>
+    <string name="decrementDate">-</string>
+    <string name="incrementDate">+</string>
+    <string name="ln_fr">Francês</string>
+    <string name="ln_en">Inglês</string>
+    <string name="ln_pt">Português</string>
+    <string name="ln_es">Espagnol</string>
+    <string name="ln_zh">Chinês</string>
+    
+</resources>

@@ -1,5 +1,6 @@
 package modele;
 
+//Model User
 public class User {
 	private int id;
 	private String login;

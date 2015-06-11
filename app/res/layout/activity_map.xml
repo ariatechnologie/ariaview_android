@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"  >
- 
-    <LinearLayout 
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="0dp"
- 	android:layout_weight="1" >
-    
-        
-	    <Button
-	        android:id="@+id/decrementDateButton"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
- 			android:layout_weight="1"
-	        android:text="@string/decrementDate" 
-	        android:onClick="decrementDate"
-	        />
-	     
-	    <Spinner
-	        android:id="@+id/spinnerDate"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-			android:layout_weight="5" />
-	    
-	     <Button
-	        android:id="@+id/incrementDateButton"
-	        android:layout_width="0dp" 
-	        android:layout_height="wrap_content"
- 			android:layout_weight="1"
-	        android:text="@string/incrementDate"
-	        android:onClick="incrementDate" />
-	    
-     
-	</LinearLayout>
-	
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/decrementDateButton"
+            style="@style/ButtonText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:onClick="decrementDate"
+            android:text="@string/decrementDate" />
+
+        <Spinner
+            android:id="@+id/spinnerDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="@drawable/cloud" />
+
+        <Button
+            android:id="@+id/incrementDateButton"
+            style="@style/ButtonText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:onClick="incrementDate"
+            android:text="@string/incrementDate" />
+    </LinearLayout>
 
     <fragment
         android:id="@+id/map"
@@ -44,5 +44,5 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="7" />
-    
+
 </LinearLayout>

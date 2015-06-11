@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">AriaView</string>
+    <string name="website">www.aria.fr</string>
     <string name="login">Login</string>
     <string name="loginHint">Login</string>
     <string name="passwordHint">Password</string>
@@ -18,7 +19,19 @@
     <string name="title_menu_polluant">Change polluant</string>
     <string name="title_menu_site">Change site</string>
     <string name="title_menu_deco">Disconnection</string>
+    <string name="title_menu_language">Language</string>
     <string name="decrementDate">-</string>
     <string name="incrementDate">+</string>
+    <string name="ln_fr">French</string>
+    <string name="ln_en">English</string>
+    <string name="ln_pt">Portuguese</string>
+    <string name="ln_es">Spanish</string>
+    <string name="ln_zh">Chinese</string>
+    <string name="localisation">
+    ARIA Technologies
+8-10 rue de la Ferme 
+92100 Boulogne-Billancourt
+Tél : +33 (0)1 46 08 68 60
+Fax : +33 (0)1 41 41 93 17</string>
     
 </resources>

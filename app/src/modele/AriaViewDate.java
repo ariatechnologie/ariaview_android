@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
+//Main Model 
 public class AriaViewDate implements Serializable{
 
 	/**

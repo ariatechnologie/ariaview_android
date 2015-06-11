@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AriaView</string>
+    <string name="login">登录</string>
+    <string name="loginHint">登录</string>
+    <string name="passwordHint">密码</string>
+    <string name="siteDialogTxt">网站 : </string>
+    <string name="dateDialogTxt">日期 : </string>
+    <string name="logScreen">登录屏幕</string>
+    <string name="CheckBox">记得我</string>
+    <string name="not_network">AriaView 连接失败。请检查您的Internet连接。</string>
+    <string name="not_login_and_password">登录名和密码丢失。</string>
+    <string name="not_password">密码丢失。</string>
+    <string name="not_login">登录丢失。</string>
+    <string name="not_correct_iden">登录或者您输入的密码不正确。</string> 
+    <string name="title_menu_date">更改日期</string>
+    <string name="title_menu_polluant">变化 polluant</string>
+    <string name="title_menu_site">更改站点</string>
+    <string name="title_menu_deco">断开</string>
+    <string name="title_menu_language">语言</string>
+    <string name="decrementDate">-</string>
+    <string name="incrementDate">+</string>
+    <string name="ln_fr">法国</string>
+    <string name="ln_en">英语</string>
+    <string name="ln_pt">葡萄牙语</string>
+    <string name="ln_es">西班牙语</string>
+    <string name="ln_zh">中国</string>
+    
+</resources>

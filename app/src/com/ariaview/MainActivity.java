@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,9 +30,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -408,5 +413,71 @@ public class MainActivity extends Activity {
 			isNewUser = false;
 		
 		return isNewUser;
+	}
+	
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_start, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+	    	case R.id.menu_language:
+	    		dialogLanguage();
+	    		return true;
+	    	default:
+	    		return super.onOptionsItemSelected(item);
+    	}
+    }
+
+    private void dialogLanguage() {
+
+    	String[] tabStringLanguage = {
+    			getResources().getString(R.string.ln_en),
+    			getResources().getString(R.string.ln_es),
+    			getResources().getString(R.string.ln_fr),
+    			getResources().getString(R.string.ln_pt),
+    			getResources().getString(R.string.ln_zh)
+    			
+    	};
+    	
+		AlertDialog.Builder builder = new Builder(this);
+		builder.setTitle(getResources().getString(R.string.title_menu_language));
+
+		builder.setItems(tabStringLanguage, new OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				
+				String ln = "";
+				if(which == 0)
+					ln = "en";
+				else if(which == 1)
+					ln = "es";
+				else if(which == 2)
+					ln = "fr";
+				else if(which == 3)
+					ln = "pt";
+				else if(which == 4)
+					ln = "zh";
+					
+					
+				Resources res = MainActivity.this.getResources();
+			    // Change locale settings in the app.
+			    DisplayMetrics dm = res.getDisplayMetrics();
+			    android.content.res.Configuration conf = res.getConfiguration();
+			    conf.locale = new Locale(ln);
+			    res.updateConfiguration(conf, dm);
+		    	dialog.dismiss();
+		    	finish();
+		    	startActivity(getIntent());
+			}
+
+		});
+
+		builder.show();
+
 	}
 }

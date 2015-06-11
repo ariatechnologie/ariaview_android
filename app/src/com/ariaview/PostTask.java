@@ -22,6 +22,8 @@ import org.apache.http.NameValuePair;
 import android.content.Context;
 import android.os.AsyncTask;
 
+//Launches a POST request asynchronously according to the given URL. 
+//Stock the file in the internal memory
 class PostTask extends AsyncTask<String, Integer, String> {
 
     private Context context;
