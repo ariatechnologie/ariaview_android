@@ -27,11 +27,11 @@
     <string name="ln_pt">Portuguese</string>
     <string name="ln_es">Spanish</string>
     <string name="ln_zh">Chinese</string>
-    <string name="localisation">
-    ARIA Technologies
-8-10 rue de la Ferme 
-92100 Boulogne-Billancourt
-Tél : +33 (0)1 46 08 68 60
-Fax : +33 (0)1 41 41 93 17</string>
+    <string name="localisation">ARIA Technologies \n
+8-10 rue de la Ferme \n
+92100 Boulogne-Billancourt \n
+France \n
+Tél : +33 (0)1 46 08 68 60 \n
+Fax : +33 (0)1 41 41 93 17 \n</string>
     
 </resources>
