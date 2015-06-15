@@ -469,10 +469,12 @@ containing a value of this type.
         public static final int language=0x7f020024;
         public static final int logo=0x7f020025;
         public static final int marker=0x7f020026;
-        public static final int pollutant=0x7f020027;
-        public static final int powered_by_google_dark=0x7f020028;
-        public static final int powered_by_google_light=0x7f020029;
-        public static final int sites=0x7f02002a;
+        public static final int play=0x7f020027;
+        public static final int pollutant=0x7f020028;
+        public static final int powered_by_google_dark=0x7f020029;
+        public static final int powered_by_google_light=0x7f02002a;
+        public static final int sites=0x7f02002b;
+        public static final int stop=0x7f02002c;
     }
     public static final class id {
         public static final int adjust_height=0x7f0a0000;
@@ -490,21 +492,22 @@ containing a value of this type.
         public static final int holo_light=0x7f0a0008;
         public static final int hybrid=0x7f0a0003;
         public static final int imageView1=0x7f0a0018;
-        public static final int incrementDateButton=0x7f0a0024;
+        public static final int incrementDateButton=0x7f0a0025;
         public static final int localisation=0x7f0a0020;
         public static final int loginButton=0x7f0a001f;
         public static final int loginTxt=0x7f0a001b;
-        public static final int map=0x7f0a0025;
+        public static final int map=0x7f0a0026;
         public static final int match_parent=0x7f0a000e;
-        public static final int menu_date=0x7f0a0026;
-        public static final int menu_deco=0x7f0a0029;
-        public static final int menu_language=0x7f0a002a;
-        public static final int menu_polluant=0x7f0a0027;
-        public static final int menu_site=0x7f0a0028;
+        public static final int menu_date=0x7f0a0027;
+        public static final int menu_deco=0x7f0a002a;
+        public static final int menu_language=0x7f0a002b;
+        public static final int menu_polluant=0x7f0a0028;
+        public static final int menu_site=0x7f0a0029;
         public static final int monochrome=0x7f0a0016;
         public static final int none=0x7f0a0002;
         public static final int normal=0x7f0a0004;
         public static final int passwordTxt=0x7f0a001d;
+        public static final int playButton=0x7f0a0024;
         public static final int production=0x7f0a0009;
         public static final int sandbox=0x7f0a000a;
         public static final int satellite=0x7f0a0005;

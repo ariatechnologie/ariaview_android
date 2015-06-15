@@ -28,6 +28,15 @@
             android:background="@drawable/cloud" />
 
         <Button
+            android:id="@+id/playButton"
+            style="@style/ButtonText"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/play"
+            android:onClick="play" />
+        
+        <Button
             android:id="@+id/incrementDateButton"
             style="@style/ButtonText"
             android:layout_width="0dp"

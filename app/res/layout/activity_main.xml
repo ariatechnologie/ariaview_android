@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/textView1"
@@ -34,9 +34,9 @@
             style="@style/TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-        android:gravity="right"
-        android:layout_marginRight="5dp"
+            android:gravity="right"
             android:text="@string/loginHint" />
 
         <EditText
@@ -61,9 +61,9 @@
             style="@style/TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-        android:gravity="right"
-        android:layout_marginRight="5dp"
+            android:gravity="right"
             android:text="@string/passwordHint" />
 
         <EditText
