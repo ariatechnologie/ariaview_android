@@ -2,9 +2,10 @@ package com.ariaview;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,7 +33,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -69,7 +69,7 @@ public class MapActivity extends Activity {
 	private PlayThread mPlayThread;
 	private boolean inPlay = false;
 	private ScheduledExecutorService executor;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,7 +77,7 @@ public class MapActivity extends Activity {
 
 		incrementButton = (Button) findViewById(R.id.incrementDateButton);
 		playButton = (Button) findViewById(R.id.playButton);
-				
+
 		documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
 		ariaDirectory = new File(getFilesDir(), "AriaView");
@@ -87,7 +87,7 @@ public class MapActivity extends Activity {
 				"AriaViewDate");
 		ariaViewDate.fillAriaViewDate((File) intent.getExtras()
 				.getSerializable("fileKML"));
-
+				
 		dateSpinner = (Spinner) findViewById(R.id.spinnerDate);
 
 		beginTimeSpanList = ariaViewDate.getBeginTimeSpanList();
@@ -154,11 +154,13 @@ public class MapActivity extends Activity {
 		googleMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 
-		String pathLegend = ariaViewDate.getAllPath()
-				+ ariaViewDate.getLegendPath();
-
-		DownloadTask downloadTaskLegend = new DownloadTask(MapActivity.this);
 		try {
+
+			String pathLegend = ariaViewDate.getAllPath()
+					+ ariaViewDate.getLegendPath();
+
+			DownloadTask downloadTaskLegend = new DownloadTask(MapActivity.this);
+
 			downloadTaskLegend.execute(pathLegend).get();
 
 			File pngLegend = new File(ariaDirectory,
@@ -168,17 +170,20 @@ public class MapActivity extends Activity {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-		}
-
-		String nameFileIcon = ariaViewDate.getListAriaViewDateTerm()
-				.get(ariaViewDate.getCurrentAriaViewDateTerm()).getIconPath();
-
-		String pathIcon = ariaViewDate.getAllPath() + nameFileIcon;
-
-		DownloadTask downloadTaskIcon = new DownloadTask(MapActivity.this);
+		} 
 
 		try {
+
+			String nameFileIcon = ariaViewDate.getListAriaViewDateTerm()
+					.get(ariaViewDate.getCurrentAriaViewDateTerm())
+					.getIconPath();
+
+			String pathIcon = ariaViewDate.getAllPath() + nameFileIcon;
+
+			DownloadTask downloadTaskIcon = new DownloadTask(MapActivity.this);
+
 			downloadTaskIcon.execute(pathIcon).get();
+
 			File pngIcon = new File(ariaDirectory, nameFileIcon);
 
 			LatLngBounds newarkBounds = new LatLngBounds(new LatLng(
@@ -223,18 +228,20 @@ public class MapActivity extends Activity {
 	}
 
 	public void play(View v) {
-	
-		if(!inPlay){
+
+		if (!inPlay) {
 			inPlay = true;
-			playButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.stop));
+			playButton.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.stop));
 			mPlayThread = new PlayThread(incrementButton);
 			executor = Executors.newSingleThreadScheduledExecutor();
 			executor.scheduleAtFixedRate(mPlayThread, 0, 2, TimeUnit.SECONDS);
-		}else{
+		} else {
 			inPlay = false;
-			playButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.play));
-			executor.shutdown();	
-		}		
+			playButton.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.play));
+			executor.shutdown();
+		}
 	}
 
 	@Override
@@ -411,6 +418,7 @@ public class MapActivity extends Activity {
 	}
 
 	private void fillAriaViewDate(File fileKML, String hostPath) {
+
 		try {
 
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -424,8 +432,9 @@ public class MapActivity extends Activity {
 					.getElementsByTagName("east").item(0).getTextContent());
 			Double west = Double.parseDouble(document
 					.getElementsByTagName("west").item(0).getTextContent());
-			String legendPath = document.getElementsByTagName("href").item(0)
-					.getTextContent();
+			String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
+					.getTextContent(), "UTF-8")
+					.replaceAll("\\+", "%20");
 
 			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
 			NodeList endTimeNodeList = document.getElementsByTagName("end");
@@ -438,8 +447,9 @@ public class MapActivity extends Activity {
 						.getTextContent();
 				String endTimeSpan = ((Element) endTimeNodeList.item(i))
 						.getTextContent();
-				String iconPath = ((Element) iconPathNodeList.item(i + 1))
-						.getTextContent();
+				String iconPath = URLEncoder.encode(((Element) iconPathNodeList.item(i + 1))
+						.getTextContent(), "UTF-8")
+						.replaceAll("\\+", "%20");
 				listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan,
 						endTimeSpan, iconPath, ""));
 			}

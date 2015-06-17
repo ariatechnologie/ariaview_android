@@ -2,6 +2,7 @@ package com.ariaview;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.InputFilter.LengthFilter;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -280,7 +282,7 @@ public class MainActivity extends Activity {
 			downloadTaskKml.execute(host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
 					+ nest + "/" + lastDate + "/" + lastDate + ".kml")
 					.get();
-
+			
 			File fileKML = new File(ariaDirectory, lastDate + ".kml");
 			fillAriaViewDate(fileKML, host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
 					+ nest + "/" + lastDate + "/");
@@ -289,11 +291,10 @@ public class MainActivity extends Activity {
 			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/" + model + "_"+ nest + "/",listDate.size()-1,currentSite,listDate, sitesTabString, nameValuePairs.get(0).getValue(),nameValuePairs.get(1).getValue());
 			
 			//ariaViewDate.fillAriaViewDate(fileKML);
-						
+			
 			intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
 			intent.putExtra("fileKML", fileKML);
-			
 			startActivity(intent);
 
 		} catch (ParserConfigurationException e) {
@@ -311,6 +312,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void fillAriaViewDate(File fileKML, String hostPath){
+
 		try {
 
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -324,19 +326,33 @@ public class MainActivity extends Activity {
 					.getTextContent());
 			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
 					.getTextContent());
-			String legendPath = document.getElementsByTagName("href").item(0)
-					.getTextContent();
+			String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
+					.getTextContent(), "UTF-8")
+					.replaceAll("\\+", "%20");
 			
 			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
 			NodeList endTimeNodeList = document.getElementsByTagName("end");
 			NodeList iconPathNodeList = document.getElementsByTagName("href");
+			
+			/*
+			NodeList polluantNodeList = document.getChildNodes();
+					
+			for (int i = 0; i < polluantNodeList.getLength(); i++) {
+				
+				if(polluantNodeList.item(i).getNodeName().equals("Folder")){
+					String polluant = ((Element) polluantNodeList.item(i+1)).getTextContent();  
+					//System.out.println("_"+polluant);
+				}
+	        }*/
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 			
 			for (int i = 0; i < beginTimeNodeList.getLength(); i++) {
 	            String beginTimeSpan = ((Element) beginTimeNodeList.item(i)).getTextContent();
 	            String endTimeSpan = ((Element) endTimeNodeList.item(i)).getTextContent();
-	            String iconPath = ((Element) iconPathNodeList.item(i+1)).getTextContent();
+	            String iconPath = URLEncoder.encode(((Element) iconPathNodeList.item(i+1)).getTextContent(), "UTF-8")
+						.replaceAll("\\+", "%20");
+	            
 	            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, ""));   
 	        }
 			

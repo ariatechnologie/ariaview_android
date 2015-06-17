@@ -3,6 +3,7 @@ package modele;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,8 +257,9 @@ public class AriaViewDate implements Serializable{
 					.getTextContent());
 			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
 					.getTextContent());
-			String legendPath = document.getElementsByTagName("href").item(0)
-					.getTextContent();
+			String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
+					.getTextContent(), "UTF-8")
+					.replaceAll("\\+", "%20");
 			
 			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
 			NodeList endTimeNodeList = document.getElementsByTagName("end");
@@ -268,7 +270,9 @@ public class AriaViewDate implements Serializable{
 			for (int i = 0; i < beginTimeNodeList.getLength(); i++) {
 	            String beginTimeSpan = ((Element) beginTimeNodeList.item(i)).getTextContent();
 	            String endTimeSpan = ((Element) endTimeNodeList.item(i)).getTextContent();
-	            String iconPath = ((Element) iconPathNodeList.item(i+1)).getTextContent();
+	            String iconPath = URLEncoder.encode(((Element) iconPathNodeList.item(i + 1))
+						.getTextContent(), "UTF-8")
+						.replaceAll("\\+", "%20");
 	            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, ""));   
 	        }
 			

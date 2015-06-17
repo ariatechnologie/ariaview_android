@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ class DownloadTask extends AsyncTask<String, Integer, String> {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(sUrl[0]);
+
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
@@ -44,7 +46,6 @@ class DownloadTask extends AsyncTask<String, Integer, String> {
             // download the file
             input = connection.getInputStream();
             output = new FileOutputStream(context.getFilesDir().getPath()+"/AriaView/"+sUrl[0].split("/")[sUrl[0].split("/").length-1]);
-
             byte data[] = new byte[4096];
             long total = 0;
             int count;
@@ -59,6 +60,7 @@ class DownloadTask extends AsyncTask<String, Integer, String> {
                     publishProgress((int) (total * 100 / fileLength));
                 output.write(data, 0, count);
             }
+
         } catch (Exception e) {
             return e.toString();
         } finally {
