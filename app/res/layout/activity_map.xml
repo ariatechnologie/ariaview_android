@@ -24,8 +24,7 @@
             android:id="@+id/spinnerDate"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="5"
-            android:background="@drawable/cloud" />
+            android:layout_weight="5" />
 
         <Button
             android:id="@+id/playButton"
