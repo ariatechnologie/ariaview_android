@@ -334,16 +334,24 @@ public class MainActivity extends Activity {
 			NodeList endTimeNodeList = document.getElementsByTagName("end");
 			NodeList iconPathNodeList = document.getElementsByTagName("href");
 			
-			/*
-			NodeList polluantNodeList = document.getChildNodes();
-					
-			for (int i = 0; i < polluantNodeList.getLength(); i++) {
+			
+			NodeList polluantNodeList = document.getElementsByTagName("Document").item(0).getChildNodes();
 				
+			for (int i = 0; i < polluantNodeList.getLength(); i++) {
 				if(polluantNodeList.item(i).getNodeName().equals("Folder")){
-					String polluant = ((Element) polluantNodeList.item(i+1)).getTextContent();  
-					//System.out.println("_"+polluant);
+					String polluant = ((Element) polluantNodeList.item(i)).getElementsByTagName("name").item(2).getTextContent(); 
+					String beginTimeSpan = ((Element) polluantNodeList.item(i)).getElementsByTagName("begin").item(0).getTextContent(); 
+					String endTimeSpan = ((Element) polluantNodeList.item(i)).getElementsByTagName("end").item(0).getTextContent(); 
+					String iconPath = ((Element) polluantNodeList.item(i)).getElementsByTagName("href").item(1).getTextContent(); 
+
+					System.out.println("_____________________________________________________________________");
+					System.out.println(polluant);
+					System.out.println(beginTimeSpan);
+					System.out.println(endTimeSpan);
+					System.out.println(iconPath);
+					System.out.println("_____________________________________________________________________");
 				}
-	        }*/
+	        }
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 			

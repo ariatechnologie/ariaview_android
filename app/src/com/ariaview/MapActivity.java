@@ -287,6 +287,7 @@ public class MapActivity extends Activity {
 		builder.setItems(tabStringSite, new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
+				ariaViewDate.setCurrentDate(-1);
 				post(which, ariaViewDate.getCurrentDate());
 				dialog.dismiss();
 			}
