@@ -327,17 +327,19 @@ public class MainActivity extends Activity {
 					.getTextContent());
 			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
 					.getTextContent());
-			String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
+			/*String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
 					.getTextContent(), "UTF-8")
-					.replaceAll("\\+", "%20");
+					.replaceAll("\\+", "%20");*/
 			
 			NodeList folderNodeList = document.getElementsByTagName("Folder");
 			
-			NodeList contentFolderNodeList;		
+			NodeList contentFolderNodeList;
+			NodeList contentScreenOverlayNodeList;
 			String polluant = "";
 			String beginTimeSpan = "";
 			String endTimeSpan = "";
 			String iconPath = "";
+			String legendPath = "";
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 			ArrayList<String> listPolluant = new ArrayList<String>();
@@ -357,12 +359,12 @@ public class MainActivity extends Activity {
 			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
 								.replaceAll("\\+", "%20");
 			          
-			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant));
+			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant, ""));
 					}
 				}
 	        }
 						
-			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath,legendPath);
+			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath);
 			ariaViewDate.setListAriaViewDateTerm(listAriaViewDateTerm);
 			ariaViewDate.setListPolluant(listPolluant);
 			

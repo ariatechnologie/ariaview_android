@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+
 //Main Model 
 public class AriaViewDate implements Serializable{
 
@@ -53,7 +54,6 @@ public class AriaViewDate implements Serializable{
 		this.east = 0;
 		this.west = 0;
 		this.listPolluant = new ArrayList<String>();
-		this.legendPath = "";
 		this.hostPath = "";
 		this.listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 		this.currentAriaViewDateTerm = 0;
@@ -71,13 +71,12 @@ public class AriaViewDate implements Serializable{
 		this.password = password;
 	}
 	
-	public AriaViewDate(double north, double south, double east, double west, String hostPath, String legendPath) {
+	public AriaViewDate(double north, double south, double east, double west, String hostPath) {
 		this.north = north;
 		this.south = south;
 		this.east = east;
 		this.west = west;
 		this.listPolluant = new ArrayList<String>();
-		this.legendPath = legendPath;
 		this.hostPath = hostPath;
 		this.listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 		this.listDate = new ArrayList<String>();
@@ -166,11 +165,10 @@ public class AriaViewDate implements Serializable{
 		this.listPolluant = polluant;
 	}
 	public String getLegendPath() {
-		return legendPath;
+		return listAriaViewDateTerm.get(currentAriaViewDateTerm).getLegendPath();
 	}
-	public void setLegendPath(String legendPath) {
-		this.legendPath = legendPath;
-	}
+	
+	
 	public ArrayList<AriaViewDateTerm> getListAriaViewDateTerm() {
 		ArrayList<AriaViewDateTerm> lisAriaViewDateTermsToReturn = new ArrayList<AriaViewDateTerm>();
 		
@@ -240,14 +238,7 @@ public class AriaViewDate implements Serializable{
 		this.currentSite = currentSite;
 	}
 
-	@Override
-	public String toString() {
-		return "AriaViewDate [north=" + north + ", south=" + south + ", east="
-				+ east + ", west=" + west + ", polluant=" + listPolluant
-				+ ", legendPath=" + legendPath + ", ariaViewDateTerm="
-				+ listAriaViewDateTerm + "]";
-	}
-	
+
 	
 	public void fillAriaViewDate(File fileKML){
 
@@ -265,9 +256,6 @@ public class AriaViewDate implements Serializable{
 					.getTextContent());
 			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
 					.getTextContent());
-			String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
-					.getTextContent(), "UTF-8")
-					.replaceAll("\\+", "%20");
 			
 			NodeList folderNodeList = document.getElementsByTagName("Folder");
 			
@@ -276,12 +264,18 @@ public class AriaViewDate implements Serializable{
 			String beginTimeSpan = "";
 			String endTimeSpan = "";
 			String iconPath = "";
+			String legendPath = "";
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
 			ArrayList<String> listPolluant = new ArrayList<String>();
 			for (int i = 0; i < folderNodeList.getLength(); i++) {
+				if(folderNodeList.item(i).getChildNodes().item(5).getNodeName().equals("ScreenOverlay")){
+					contentFolderNodeList = folderNodeList.item(i).getChildNodes();
+					legendPath = URLEncoder.encode(getElementsByTagName(contentFolderNodeList,"href",new ArrayList<String>()).get(0), "UTF-8")
+							.replaceAll("\\+", "%20");
+				}
 				
-				if(folderNodeList.item(i).getNodeName().equals("Folder") && folderNodeList.item(i).getChildNodes().item(5).getNodeName().equals("GroundOverlay")){
+				if(folderNodeList.item(i).getChildNodes().item(5).getNodeName().equals("GroundOverlay")){
 					contentFolderNodeList = folderNodeList.item(i).getChildNodes();
 					polluant = ((Element) contentFolderNodeList.item(1)).getTextContent();
 					listPolluant.add(polluant);
@@ -295,7 +289,7 @@ public class AriaViewDate implements Serializable{
 			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
 								.replaceAll("\\+", "%20");
 			          
-			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant));
+			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant, legendPath));
 					}
 				}
 	        }
@@ -304,7 +298,6 @@ public class AriaViewDate implements Serializable{
 			setSouth(south);
 			setEast(east);
 			setWest(west);
-			setLegendPath(legendPath);
 			setListAriaViewDateTerm(listAriaViewDateTerm);
 			setListPolluant(listPolluant);
 			

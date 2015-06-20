@@ -35,13 +35,18 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +64,6 @@ public class MapActivity extends Activity {
 	private GoogleMap googleMap;
 	private AriaViewDate ariaViewDate;
 	private File ariaDirectory;
-	private List<String> beginTimeSpanList;
 	private Spinner dateSpinner;
 	private String url_ws_infosite = "http://web.aria.fr/webservices/ARIAVIEW/infosite.php";
 	private Document document;
@@ -70,6 +74,7 @@ public class MapActivity extends Activity {
 	private PlayThread mPlayThread;
 	private boolean inPlay = false;
 	private ScheduledExecutorService executor;
+	private ImageView legendImageView;
 	private ArrayAdapter<String> dataAdapter;
 	private float zoom = 11;
 	private CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -81,6 +86,9 @@ public class MapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
+		legendImageView = new ImageView(this);
+		this.addContentView(legendImageView,new LayoutParams(Gravity.RIGHT));
+		
 		incrementButton = (Button) findViewById(R.id.incrementDateButton);
 		playButton = (Button) findViewById(R.id.playButton);
 
@@ -174,15 +182,21 @@ public class MapActivity extends Activity {
 		try {
 
 			String pathLegend = ariaViewDate.getAllPath()
-					+ ariaViewDate.getLegendPath();
+					+ ariaViewDate.getListAriaViewDateTerm().get(ariaViewDate.getCurrentAriaViewDateTerm()).getLegendPath();
 
 			DownloadTask downloadTaskLegend = new DownloadTask(MapActivity.this);
 
 			downloadTaskLegend.execute(pathLegend).get();
 
 			File pngLegend = new File(ariaDirectory,
-					ariaViewDate.getLegendPath());
-
+					ariaViewDate.getListAriaViewDateTerm().get(ariaViewDate.getCurrentAriaViewDateTerm()).getLegendPath());
+			
+			
+			if(pngLegend.exists()){
+				legendImageView.setImageBitmap(BitmapFactory.decodeFile(pngLegend.getAbsolutePath()));
+				legendImageView.setAlpha(75);
+			}
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -498,12 +512,12 @@ public class MapActivity extends Activity {
 			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
 								.replaceAll("\\+", "%20");
 			          
-			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant));
+			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant, ""));
 					}
 				}
 	        }
 						
-			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath,legendPath);
+			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath);
 			ariaViewDate.setListAriaViewDateTerm(listAriaViewDateTerm);
 			ariaViewDate.setListPolluant(listPolluant);
 			
