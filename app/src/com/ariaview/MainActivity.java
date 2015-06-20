@@ -20,6 +20,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -330,42 +331,40 @@ public class MainActivity extends Activity {
 					.getTextContent(), "UTF-8")
 					.replaceAll("\\+", "%20");
 			
-			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
-			NodeList endTimeNodeList = document.getElementsByTagName("end");
-			NodeList iconPathNodeList = document.getElementsByTagName("href");
+			NodeList folderNodeList = document.getElementsByTagName("Folder");
 			
-			
-			NodeList polluantNodeList = document.getElementsByTagName("Document").item(0).getChildNodes();
-				
-			for (int i = 0; i < polluantNodeList.getLength(); i++) {
-				if(polluantNodeList.item(i).getNodeName().equals("Folder")){
-					String polluant = ((Element) polluantNodeList.item(i)).getElementsByTagName("name").item(2).getTextContent(); 
-					String beginTimeSpan = ((Element) polluantNodeList.item(i)).getElementsByTagName("begin").item(0).getTextContent(); 
-					String endTimeSpan = ((Element) polluantNodeList.item(i)).getElementsByTagName("end").item(0).getTextContent(); 
-					String iconPath = ((Element) polluantNodeList.item(i)).getElementsByTagName("href").item(1).getTextContent(); 
-
-					System.out.println("_____________________________________________________________________");
-					System.out.println(polluant);
-					System.out.println(beginTimeSpan);
-					System.out.println(endTimeSpan);
-					System.out.println(iconPath);
-					System.out.println("_____________________________________________________________________");
-				}
-	        }
+			NodeList contentFolderNodeList;		
+			String polluant = "";
+			String beginTimeSpan = "";
+			String endTimeSpan = "";
+			String iconPath = "";
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
-			
-			for (int i = 0; i < beginTimeNodeList.getLength(); i++) {
-	            String beginTimeSpan = ((Element) beginTimeNodeList.item(i)).getTextContent();
-	            String endTimeSpan = ((Element) endTimeNodeList.item(i)).getTextContent();
-	            String iconPath = URLEncoder.encode(((Element) iconPathNodeList.item(i+1)).getTextContent(), "UTF-8")
-						.replaceAll("\\+", "%20");
-	            
-	            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, ""));   
+			ArrayList<String> listPolluant = new ArrayList<String>();
+			for (int i = 0; i < folderNodeList.getLength(); i++) {
+				
+				if(folderNodeList.item(i).getNodeName().equals("Folder")){
+					contentFolderNodeList = folderNodeList.item(i).getChildNodes();
+					polluant = ((Element) contentFolderNodeList.item(1)).getTextContent();
+					listPolluant.add(polluant);
+					ArrayList<String> beginTimeList = getElementsByTagName(contentFolderNodeList,"begin",new ArrayList<String>());
+					ArrayList<String> endTimeList = getElementsByTagName(contentFolderNodeList,"end",new ArrayList<String>());
+					ArrayList<String> iconPathList = getElementsByTagName(contentFolderNodeList,"href",new ArrayList<String>());
+					
+					for(int f=0; f<beginTimeList.size();f++){
+					    beginTimeSpan = beginTimeList.get(f);
+			            endTimeSpan = endTimeList.get(f);
+			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
+								.replaceAll("\\+", "%20");
+			          
+			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant));
+					}
+				}
 	        }
-			
+						
 			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath,legendPath);
 			ariaViewDate.setListAriaViewDateTerm(listAriaViewDateTerm);
+			ariaViewDate.setListPolluant(listPolluant);
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -375,6 +374,24 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
+	
+	public ArrayList<String> getElementsByTagName(NodeList nodeList, String tag, ArrayList<String> arrayListTag)
+	{
+	    for (int i = 0; i < nodeList.getLength(); i++) {
+	        Node childNode = nodeList.item(i);
+	        if (childNode.getNodeName().equals(tag)) {
+	        	arrayListTag.add(nodeList.item(i).getTextContent());
+	        }
+
+	        NodeList children = childNode.getChildNodes();
+	        if (children != null)
+	        {
+	        	getElementsByTagName(children, tag, arrayListTag);
+	        }
+	    }
+	    return arrayListTag;
+	}
+	
 
 	/**
 	 * Method to check whether my device has or not a network connection Need

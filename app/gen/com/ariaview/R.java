@@ -538,7 +538,7 @@ containing a value of this type.
         public static final int gtm_analytics=0x7f040000;
     }
     public static final class string {
-        public static final int CheckBox=0x7f06002e;
+        public static final int CheckBox=0x7f06002f;
         public static final int accept=0x7f060002;
         public static final int app_name=0x7f060026;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
@@ -653,31 +653,32 @@ containing a value of this type.
         public static final int create_calendar_title=0x7f060004;
         public static final int dateDialogTxt=0x7f06002c;
         public static final int decline=0x7f060003;
-        public static final int decrementDate=0x7f060039;
-        public static final int incrementDate=0x7f06003a;
-        public static final int ln_en=0x7f06003c;
-        public static final int ln_es=0x7f06003e;
-        public static final int ln_fr=0x7f06003b;
-        public static final int ln_pt=0x7f06003d;
-        public static final int ln_zh=0x7f06003f;
-        public static final int localisation=0x7f060040;
-        public static final int logScreen=0x7f06002d;
+        public static final int decrementDate=0x7f06003a;
+        public static final int incrementDate=0x7f06003b;
+        public static final int ln_en=0x7f06003d;
+        public static final int ln_es=0x7f06003f;
+        public static final int ln_fr=0x7f06003c;
+        public static final int ln_pt=0x7f06003e;
+        public static final int ln_zh=0x7f060040;
+        public static final int localisation=0x7f060041;
+        public static final int logScreen=0x7f06002e;
         public static final int login=0x7f060028;
         public static final int loginHint=0x7f060029;
-        public static final int not_correct_iden=0x7f060033;
-        public static final int not_login=0x7f060032;
-        public static final int not_login_and_password=0x7f060030;
-        public static final int not_network=0x7f06002f;
-        public static final int not_password=0x7f060031;
+        public static final int not_correct_iden=0x7f060034;
+        public static final int not_login=0x7f060033;
+        public static final int not_login_and_password=0x7f060031;
+        public static final int not_network=0x7f060030;
+        public static final int not_password=0x7f060032;
         public static final int passwordHint=0x7f06002a;
+        public static final int polluantDialogTxt=0x7f06002d;
         public static final int siteDialogTxt=0x7f06002b;
         public static final int store_picture_message=0x7f060001;
         public static final int store_picture_title=0x7f060000;
-        public static final int title_menu_date=0x7f060034;
-        public static final int title_menu_deco=0x7f060037;
-        public static final int title_menu_language=0x7f060038;
-        public static final int title_menu_polluant=0x7f060035;
-        public static final int title_menu_site=0x7f060036;
+        public static final int title_menu_date=0x7f060035;
+        public static final int title_menu_deco=0x7f060038;
+        public static final int title_menu_language=0x7f060039;
+        public static final int title_menu_polluant=0x7f060036;
+        public static final int title_menu_site=0x7f060037;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */

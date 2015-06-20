@@ -8,6 +8,7 @@
     <string name="passwordHint">Password</string>
     <string name="siteDialogTxt">Sites : </string>
     <string name="dateDialogTxt">Dates : </string>
+    <string name="polluantDialogTxt">Polluant : </string>
     <string name="logScreen">Login Screen</string>
     <string name="CheckBox">Remember me</string>
     <string name="not_network">AriaView failed to connect. Please check your Internet connection.</string>

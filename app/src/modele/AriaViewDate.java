@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -88,6 +89,7 @@ public class AriaViewDate implements Serializable{
 		List<String> beginTimeSpanList = new ArrayList<String>();
 		
 		for(AriaViewDateTerm ariaViewDateTerm: listAriaViewDateTerm){
+			if(ariaViewDateTerm.getPolluant().equals(listPolluant.get(currentPolluant)))
 			 beginTimeSpanList.add(ariaViewDateTerm.getBeginTimeSpan());
 		}
 		
@@ -170,7 +172,13 @@ public class AriaViewDate implements Serializable{
 		this.legendPath = legendPath;
 	}
 	public ArrayList<AriaViewDateTerm> getListAriaViewDateTerm() {
-		return listAriaViewDateTerm;
+		ArrayList<AriaViewDateTerm> lisAriaViewDateTermsToReturn = new ArrayList<AriaViewDateTerm>();
+		
+		for(AriaViewDateTerm dateTerm :listAriaViewDateTerm){
+			if(dateTerm.getPolluant().equals(listPolluant.get(currentPolluant)))
+				lisAriaViewDateTermsToReturn.add(dateTerm);
+		}
+		return lisAriaViewDateTermsToReturn;
 	}
 	public void setListAriaViewDateTerm(ArrayList<AriaViewDateTerm> ariaViewDateTerm) {
 		this.listAriaViewDateTerm = ariaViewDateTerm;
@@ -261,19 +269,35 @@ public class AriaViewDate implements Serializable{
 					.getTextContent(), "UTF-8")
 					.replaceAll("\\+", "%20");
 			
-			NodeList beginTimeNodeList = document.getElementsByTagName("begin");
-			NodeList endTimeNodeList = document.getElementsByTagName("end");
-			NodeList iconPathNodeList = document.getElementsByTagName("href");
+			NodeList folderNodeList = document.getElementsByTagName("Folder");
+			
+			NodeList contentFolderNodeList;		
+			String polluant = "";
+			String beginTimeSpan = "";
+			String endTimeSpan = "";
+			String iconPath = "";
 			
 			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
-			
-			for (int i = 0; i < beginTimeNodeList.getLength(); i++) {
-	            String beginTimeSpan = ((Element) beginTimeNodeList.item(i)).getTextContent();
-	            String endTimeSpan = ((Element) endTimeNodeList.item(i)).getTextContent();
-	            String iconPath = URLEncoder.encode(((Element) iconPathNodeList.item(i + 1))
-						.getTextContent(), "UTF-8")
-						.replaceAll("\\+", "%20");
-	            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, ""));   
+			ArrayList<String> listPolluant = new ArrayList<String>();
+			for (int i = 0; i < folderNodeList.getLength(); i++) {
+				
+				if(folderNodeList.item(i).getNodeName().equals("Folder") && folderNodeList.item(i).getChildNodes().item(5).getNodeName().equals("GroundOverlay")){
+					contentFolderNodeList = folderNodeList.item(i).getChildNodes();
+					polluant = ((Element) contentFolderNodeList.item(1)).getTextContent();
+					listPolluant.add(polluant);
+					ArrayList<String> beginTimeList = getElementsByTagName(contentFolderNodeList,"begin",new ArrayList<String>());
+					ArrayList<String> endTimeList = getElementsByTagName(contentFolderNodeList,"end",new ArrayList<String>());
+					ArrayList<String> iconPathList = getElementsByTagName(contentFolderNodeList,"href",new ArrayList<String>());
+										
+					for(int f=0; f<beginTimeList.size();f++){
+					    beginTimeSpan = beginTimeList.get(f);
+			            endTimeSpan = endTimeList.get(f);
+			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
+								.replaceAll("\\+", "%20");
+			          
+			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant));
+					}
+				}
 	        }
 			
 			setNorth(north);
@@ -282,6 +306,7 @@ public class AriaViewDate implements Serializable{
 			setWest(west);
 			setLegendPath(legendPath);
 			setListAriaViewDateTerm(listAriaViewDateTerm);
+			setListPolluant(listPolluant);
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
@@ -290,6 +315,23 @@ public class AriaViewDate implements Serializable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ArrayList<String> getElementsByTagName(NodeList nodeList, String tag, ArrayList<String> arrayListTag)
+	{
+	    for (int i = 0; i < nodeList.getLength(); i++) {
+	        Node childNode = nodeList.item(i);
+	        if (childNode.getNodeName().equals(tag)) {
+	        	arrayListTag.add(nodeList.item(i).getTextContent());
+	        }
+
+	        NodeList children = childNode.getChildNodes();
+	        if (children != null)
+	        {
+	        	getElementsByTagName(children, tag, arrayListTag);
+	        }
+	    }
+	    return arrayListTag;
 	}
 
 	
