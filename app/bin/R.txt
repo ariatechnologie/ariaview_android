@@ -115,7 +115,7 @@ int id book_now 0x7f0a0010
 int id buyButton 0x7f0a000c
 int id buy_now 0x7f0a0011
 int id buy_with_google 0x7f0a0012
-int id checkBox1 0x7f0a001e
+int id checkBoxRemember 0x7f0a001e
 int id classic 0x7f0a0014
 int id decrementDateButton 0x7f0a0022
 int id donate_with_google 0x7f0a0013
@@ -159,7 +159,7 @@ int layout activity_map 0x7f030001
 int menu menu 0x7f090000
 int menu menu_start 0x7f090001
 int raw gtm_analytics 0x7f040000
-int string CheckBox 0x7f06002f
+int string CheckBoxRemember 0x7f06002f
 int string accept 0x7f060002
 int string app_name 0x7f060026
 int string common_android_wear_notification_needs_update_text 0x7f060009
@@ -208,11 +208,11 @@ int string localisation 0x7f060041
 int string logScreen 0x7f06002e
 int string login 0x7f060028
 int string loginHint 0x7f060029
-int string not_correct_iden 0x7f060034
-int string not_login 0x7f060033
-int string not_login_and_password 0x7f060031
-int string not_network 0x7f060030
-int string not_password 0x7f060032
+int string no_correct_iden 0x7f060034
+int string no_login 0x7f060033
+int string no_login_and_password 0x7f060031
+int string no_network 0x7f060030
+int string no_password 0x7f060032
 int string passwordHint 0x7f06002a
 int string polluantDialogTxt 0x7f06002d
 int string siteDialogTxt 0x7f06002b

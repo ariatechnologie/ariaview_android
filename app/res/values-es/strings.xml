@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AriaView</string>
     <string name="login">Iniciar Sesión</string>
     <string name="loginHint">Iniciar Sesión</string>
     <string name="passwordHint">Contraseña</string>
     <string name="siteDialogTxt">Lugares : </string>
     <string name="dateDialogTxt">Fechas : </string>
+    <string name="polluantDialogTxt">Contaminante : </string>
     <string name="logScreen">Entrar pantalla</string>
-    <string name="CheckBox">Recuérdame</string>
-    <string name="not_network">AriaView fracasado para conectar. Por favor, compruebe su conexión a Internet.</string>
-    <string name="not_login_and_password">Login y que falta la contraseña.</string>
-    <string name="not_password">Contraseña falta.</string>
-    <string name="not_login">Entrar falta.</string>
-    <string name="not_correct_iden">Inicie sesión o contraseña que ha introducido es incorrecta.</string> 
+    <string name="CheckBoxRemember">Recuérdame</string>
+    <string name="no_network">AriaView fracasado para conectar. Por favor, compruebe su conexión a Internet.</string>
+    <string name="no_login_and_password">Login y que falta la contraseña.</string>
+    <string name="no_password">Contraseña falta.</string>
+    <string name="no_login">Entrar falta.</string>
+    <string name="no_correct_iden">Inicie sesión o contraseña que ha introducido es incorrecta.</string> 
     <string name="title_menu_date">Cambiar la fecha</string>
     <string name="title_menu_polluant">Cambio polluant</string>
     <string name="title_menu_site">Cambiar sitio</string>

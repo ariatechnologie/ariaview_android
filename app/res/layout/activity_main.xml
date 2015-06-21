@@ -76,12 +76,12 @@
     </LinearLayout>
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/checkBoxRemember"
         style="@style/TextView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="@string/CheckBox" />
+        android:text="@string/CheckBoxRemember" />
 
     <Button
         android:id="@+id/loginButton"

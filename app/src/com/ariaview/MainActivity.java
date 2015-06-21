@@ -2,7 +2,6 @@ package com.ariaview;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -13,14 +12,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import modele.AriaViewDate;
-import modele.AriaViewDateTerm;
 import modele.User;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -36,7 +33,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.InputFilter.LengthFilter;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +41,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+//Main Activity, Login Page
+//Use of Web Service login.php and infosite.php
 public class MainActivity extends Activity {
 
 	private AriaViewBDD ariaViewBDD;
@@ -52,11 +50,12 @@ public class MainActivity extends Activity {
 	private List<User> listUser;
 	private boolean userRemember;
 	private AriaViewDate ariaViewDate;
-	
+
 	private Intent intent;
 
 	private EditText loginEditText;
 	private EditText passwordEditText;
+	private CheckBox checkBoxRemember;
 
 	private String url_ws_login = "http://web.aria.fr/webservices/ARIAVIEW/login.php";
 	private String url_ws_infosite = "http://web.aria.fr/webservices/ARIAVIEW/infosite.php";
@@ -84,7 +83,7 @@ public class MainActivity extends Activity {
 
 		ariaDirectory = new File(getFilesDir(), "AriaView");
 		ariaDirectory.mkdirs();
-		
+
 		documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
 		ariaViewBDD = new AriaViewBDD(this);
@@ -94,12 +93,13 @@ public class MainActivity extends Activity {
 
 		loginEditText = (EditText) findViewById(R.id.loginTxt);
 		passwordEditText = (EditText) findViewById(R.id.passwordTxt);
+		checkBoxRemember = (CheckBox) findViewById(R.id.checkBoxRemember);
 
 		if (listUser.size() > 0) {
 			currentUser = listUser.get(0);
 			loginEditText.setText(currentUser.getLogin());
 			passwordEditText.setText(currentUser.getPassword());
-			((CheckBox) findViewById(R.id.checkBox1)).setChecked(true);
+			checkBoxRemember.setChecked(true);
 		} else
 			currentUser = new User();
 
@@ -113,17 +113,15 @@ public class MainActivity extends Activity {
 
 		if (!checkDeviceConnected()) {
 			Toast.makeText(MainActivity.this,
-					getResources().getString(R.string.not_network),
+					getResources().getString(R.string.no_network),
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		clearDirectory();
-		
-		CheckBox checkBoxRemember = (CheckBox) findViewById(R.id.checkBox1);
 
 		userRemember = checkBoxRemember.isChecked();
-		
+
 		// SEND LOGIN 1
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("login", loginEditText
@@ -138,38 +136,37 @@ public class MainActivity extends Activity {
 			PostTask postTask = new PostTask(MainActivity.this, nameValuePairs,
 					login1XML);
 			postTask.execute(url_ws_login).get();
-			
-			if(fileXML.isFile()){
+
+			if (fileXML.isFile()) {
 				documentBuilder = documentBuilderFactory.newDocumentBuilder();
 				document = documentBuilder.parse(fileXML);
-	
+
 				sitesNodeList = document.getElementsByTagName("site");
-	
+
 				sitesTabString = new String[sitesNodeList.getLength()];
 				for (int i = 0; sitesNodeList.getLength() > i; i++) {
 					sitesTabString[i] = sitesNodeList.item(i).getTextContent();
 				}
-	
+
 				boolean siteFind = false;
-				if(!isNewUser()){
+				if (!isNewUser()) {
 					int i = 0;
-					while(i<sitesTabString.length && !siteFind)
-					{
-						if(currentUser.getSite().equals(sitesTabString[i])){
+					while (i < sitesTabString.length && !siteFind) {
+						if (currentUser.getSite().equals(sitesTabString[i])) {
 							authen(i);
 							siteFind = true;
 						}
 						i++;
 					}
-				}	
-				if(!siteFind)
+				}
+				if (!siteFind)
 					dialogSite(sitesTabString);
-			}else{
+			} else {
 				Toast.makeText(MainActivity.this,
-						getResources().getString(R.string.not_correct_iden),
+						getResources().getString(R.string.no_correct_iden),
 						Toast.LENGTH_LONG).show();
 			}
-			
+
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e1) {
@@ -182,18 +179,17 @@ public class MainActivity extends Activity {
 
 	private void dialogSite(String[] tabStringSite) {
 
-		AlertDialog.Builder builder = new Builder(this);
-		builder.setTitle(getResources().getString(R.string.siteDialogTxt));
+		AlertDialog.Builder builder = new Builder(this).setTitle(
+				getResources().getString(R.string.siteDialogTxt)).setItems(
+				tabStringSite, new OnClickListener() {
 
-		builder.setItems(tabStringSite, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
 
-			public void onClick(DialogInterface dialog, int which) {
-				
-				authen(which);
-				dialog.dismiss();
-			}
+						authen(which);
+						dialog.dismiss();
+					}
 
-		});
+				});
 
 		builder.show();
 
@@ -202,10 +198,10 @@ public class MainActivity extends Activity {
 	private void authen(int currentSite) {
 
 		String choiceSite = sitesTabString[currentSite];
-				
+
 		if (!checkDeviceConnected()) {
 			Toast.makeText(MainActivity.this,
-					getResources().getString(R.string.not_network),
+					getResources().getString(R.string.no_network),
 					Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -232,8 +228,7 @@ public class MainActivity extends Activity {
 				.getText().toString()));
 		nameValuePairs.add(new BasicNameValuePair("password", passwordEditText
 				.getText().toString()));
-		nameValuePairs.add(new BasicNameValuePair("site",
-				choiceSite));
+		nameValuePairs.add(new BasicNameValuePair("site", choiceSite));
 
 		File fileXML = new File(ariaDirectory, login2XML);
 
@@ -268,31 +263,31 @@ public class MainActivity extends Activity {
 
 			Document documentDateFile = documentBuilder.parse(fileXML);
 
-			
-			NodeList dateNodeList = documentDateFile.getElementsByTagName("name");
-			
+			NodeList dateNodeList = documentDateFile
+					.getElementsByTagName("name");
+
 			ArrayList<String> listDate = new ArrayList<String>();
-			
+
 			for (int i = 1; i < dateNodeList.getLength(); i++) {
-				listDate.add(((Element) dateNodeList.item(i)).getTextContent());   
-	        }
-			
-			String lastDate = listDate.get(listDate.size()-1);
+				listDate.add(((Element) dateNodeList.item(i)).getTextContent());
+			}
+
+			String lastDate = listDate.get(listDate.size() - 1);
 
 			DownloadTask downloadTaskKml = new DownloadTask(MainActivity.this);
-			downloadTaskKml.execute(host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-					+ nest + "/" + lastDate + "/" + lastDate + ".kml")
+			downloadTaskKml.execute(
+					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
+							+ nest + "/" + lastDate + "/" + lastDate + ".kml")
 					.get();
-			
+
 			File fileKML = new File(ariaDirectory, lastDate + ".kml");
-			fillAriaViewDate(fileKML, host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-					+ nest + "/" + lastDate + "/");
-			
-				
-			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/" + model + "_"+ nest + "/",listDate.size()-1,currentSite,listDate, sitesTabString, nameValuePairs.get(0).getValue(),nameValuePairs.get(1).getValue());
-			
-			//ariaViewDate.fillAriaViewDate(fileKML);
-			
+
+			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/"
+					+ model + "_" + nest + "/", listDate.size() - 1,
+					currentSite, listDate, sitesTabString, nameValuePairs
+							.get(0).getValue(), nameValuePairs.get(1)
+							.getValue());
+
 			intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
 			intent.putExtra("fileKML", fileKML);
@@ -311,96 +306,9 @@ public class MainActivity extends Activity {
 		}
 
 	}
-	
-	private void fillAriaViewDate(File fileKML, String hostPath){
 
-		try {
-
-			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			document = documentBuilder.parse(fileKML);
-
-			Double north  = Double.parseDouble(document.getElementsByTagName("north").item(0)
-					.getTextContent());
-			Double south = Double.parseDouble(document.getElementsByTagName("south").item(0)
-					.getTextContent());
-			Double east = Double.parseDouble(document.getElementsByTagName("east").item(0)
-					.getTextContent());
-			Double west = Double.parseDouble(document.getElementsByTagName("west").item(0)
-					.getTextContent());
-			/*String legendPath = URLEncoder.encode(document.getElementsByTagName("href").item(0)
-					.getTextContent(), "UTF-8")
-					.replaceAll("\\+", "%20");*/
-			
-			NodeList folderNodeList = document.getElementsByTagName("Folder");
-			
-			NodeList contentFolderNodeList;
-			NodeList contentScreenOverlayNodeList;
-			String polluant = "";
-			String beginTimeSpan = "";
-			String endTimeSpan = "";
-			String iconPath = "";
-			String legendPath = "";
-			
-			ArrayList<AriaViewDateTerm> listAriaViewDateTerm = new ArrayList<AriaViewDateTerm>();
-			ArrayList<String> listPolluant = new ArrayList<String>();
-			for (int i = 0; i < folderNodeList.getLength(); i++) {
-				
-				if(folderNodeList.item(i).getNodeName().equals("Folder")){
-					contentFolderNodeList = folderNodeList.item(i).getChildNodes();
-					polluant = ((Element) contentFolderNodeList.item(1)).getTextContent();
-					listPolluant.add(polluant);
-					ArrayList<String> beginTimeList = getElementsByTagName(contentFolderNodeList,"begin",new ArrayList<String>());
-					ArrayList<String> endTimeList = getElementsByTagName(contentFolderNodeList,"end",new ArrayList<String>());
-					ArrayList<String> iconPathList = getElementsByTagName(contentFolderNodeList,"href",new ArrayList<String>());
-					
-					for(int f=0; f<beginTimeList.size();f++){
-					    beginTimeSpan = beginTimeList.get(f);
-			            endTimeSpan = endTimeList.get(f);
-			            iconPath = URLEncoder.encode(iconPathList.get(f), "UTF-8")
-								.replaceAll("\\+", "%20");
-			          
-			            listAriaViewDateTerm.add(new AriaViewDateTerm(beginTimeSpan, endTimeSpan, iconPath, polluant, ""));
-					}
-				}
-	        }
-						
-			ariaViewDate = new AriaViewDate(north,south,east,west,hostPath);
-			ariaViewDate.setListAriaViewDateTerm(listAriaViewDateTerm);
-			ariaViewDate.setListPolluant(listPolluant);
-			
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public ArrayList<String> getElementsByTagName(NodeList nodeList, String tag, ArrayList<String> arrayListTag)
-	{
-	    for (int i = 0; i < nodeList.getLength(); i++) {
-	        Node childNode = nodeList.item(i);
-	        if (childNode.getNodeName().equals(tag)) {
-	        	arrayListTag.add(nodeList.item(i).getTextContent());
-	        }
-
-	        NodeList children = childNode.getChildNodes();
-	        if (children != null)
-	        {
-	        	getElementsByTagName(children, tag, arrayListTag);
-	        }
-	    }
-	    return arrayListTag;
-	}
-	
-
-	/**
-	 * Method to check whether my device has or not a network connection Need
-	 * permission : android.permission.ACCESS_NETWORK_STATE
-	 * 
-	 * @return True if device is connected to network and false else
-	 */
+	// Method to check whether the device has or not a network connection
+	// @return True if device is connected to network and false else
 	private boolean checkDeviceConnected() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -408,16 +316,18 @@ public class MainActivity extends Activity {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
+	// Clear AriaApp Directory
 	private void clearDirectory() {
-		
+
 		if (ariaDirectory.isDirectory()) {
-	        String[] children = ariaDirectory.list();
-	        for (int i = 0; i < children.length; i++) {
-	            new File(ariaDirectory, children[i]).delete();
-	        }
-	    }
+			String[] children = ariaDirectory.list();
+			for (int i = 0; i < children.length; i++) {
+				new File(ariaDirectory, children[i]).delete();
+			}
+		}
 	}
 
+	// Method to check if input is correctly completed and display message toast
 	private boolean checkInput() {
 		String loginTxt = ((EditText) findViewById(R.id.loginTxt)).getText()
 				.toString();
@@ -427,98 +337,97 @@ public class MainActivity extends Activity {
 
 		if (loginTxt.equals("") && passwordTxt.equals(""))
 			Toast.makeText(MainActivity.this,
-					getResources().getString(R.string.not_login_and_password),
+					getResources().getString(R.string.no_login_and_password),
 					Toast.LENGTH_LONG).show();
 		else if (passwordTxt.equals(""))
 			Toast.makeText(MainActivity.this,
-					getResources().getString(R.string.not_password),
+					getResources().getString(R.string.no_password),
 					Toast.LENGTH_LONG).show();
 		else if (loginTxt.equals(""))
 			Toast.makeText(MainActivity.this,
-					getResources().getString(R.string.not_login),
+					getResources().getString(R.string.no_login),
 					Toast.LENGTH_LONG).show();
 		else
 			isCheck = true;
 
 		return isCheck;
 	}
-	
-	private boolean isNewUser(){
-		
+
+	// Method to check if the user logging is different from the last user
+	// backup
+	private boolean isNewUser() {
+
 		boolean isNewUser = true;
-		
-		if(currentUser != null
-		&&
-		((EditText) findViewById(R.id.loginTxt)).getText().toString().equals(currentUser.getLogin())
-		&&
-		((EditText) findViewById(R.id.passwordTxt)).getText().toString().equals(currentUser.getPassword())
-		)
+
+		if (currentUser != null
+				&& ((EditText) findViewById(R.id.loginTxt)).getText()
+						.toString().equals(currentUser.getLogin())
+				&& ((EditText) findViewById(R.id.passwordTxt)).getText()
+						.toString().equals(currentUser.getPassword()))
 			isNewUser = false;
-		
+
 		return isNewUser;
 	}
-	
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_start, menu);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-	    	case R.id.menu_language:
-	    		dialogLanguage();
-	    		return true;
-	    	default:
-	    		return super.onOptionsItemSelected(item);
-    	}
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_start, menu);
+		return true;
+	}
 
-    private void dialogLanguage() {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_language:
+			dialogLanguage();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-    	String[] tabStringLanguage = {
-    			getResources().getString(R.string.ln_en),
-    			getResources().getString(R.string.ln_es),
-    			getResources().getString(R.string.ln_fr),
-    			getResources().getString(R.string.ln_pt),
-    			getResources().getString(R.string.ln_zh)
-    			
-    	};
-    	
-		AlertDialog.Builder builder = new Builder(this);
-		builder.setTitle(getResources().getString(R.string.title_menu_language));
+	private void dialogLanguage() {
 
-		builder.setItems(tabStringLanguage, new OnClickListener() {
+		String[] tabStringLanguage = {
+				getResources().getString(R.string.ln_en),
+				getResources().getString(R.string.ln_es),
+				getResources().getString(R.string.ln_fr),
+				getResources().getString(R.string.ln_pt),
+				getResources().getString(R.string.ln_zh)
 
-			public void onClick(DialogInterface dialog, int which) {
-				
-				String ln = "";
-				if(which == 0)
-					ln = "en";
-				else if(which == 1)
-					ln = "es";
-				else if(which == 2)
-					ln = "fr";
-				else if(which == 3)
-					ln = "pt";
-				else if(which == 4)
-					ln = "zh";
-					
-					
-				Resources res = MainActivity.this.getResources();
-			    // Change locale settings in the app.
-			    DisplayMetrics dm = res.getDisplayMetrics();
-			    android.content.res.Configuration conf = res.getConfiguration();
-			    conf.locale = new Locale(ln);
-			    res.updateConfiguration(conf, dm);
-		    	dialog.dismiss();
-		    	finish();
-		    	startActivity(getIntent());
-			}
+		};
 
-		});
+		AlertDialog.Builder builder = new Builder(this).setTitle(
+				getResources().getString(R.string.title_menu_language))
+				.setItems(tabStringLanguage, new OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+
+						String ln = "";
+						if (which == 0)
+							ln = "en";
+						else if (which == 1)
+							ln = "es";
+						else if (which == 2)
+							ln = "fr";
+						else if (which == 3)
+							ln = "pt";
+						else if (which == 4)
+							ln = "zh";
+
+						Resources res = MainActivity.this.getResources();
+						// Change locale settings in the app.
+						DisplayMetrics dm = res.getDisplayMetrics();
+						android.content.res.Configuration conf = res
+								.getConfiguration();
+						conf.locale = new Locale(ln);
+						res.updateConfiguration(conf, dm);
+						dialog.dismiss();
+						finish();
+						startActivity(getIntent());
+					}
+
+				});
 
 		builder.show();
 

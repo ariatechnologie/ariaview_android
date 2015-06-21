@@ -484,7 +484,7 @@ containing a value of this type.
         public static final int buyButton=0x7f0a000c;
         public static final int buy_now=0x7f0a0011;
         public static final int buy_with_google=0x7f0a0012;
-        public static final int checkBox1=0x7f0a001e;
+        public static final int checkBoxRemember=0x7f0a001e;
         public static final int classic=0x7f0a0014;
         public static final int decrementDateButton=0x7f0a0022;
         public static final int donate_with_google=0x7f0a0013;
@@ -538,7 +538,7 @@ containing a value of this type.
         public static final int gtm_analytics=0x7f040000;
     }
     public static final class string {
-        public static final int CheckBox=0x7f06002f;
+        public static final int CheckBoxRemember=0x7f06002f;
         public static final int accept=0x7f060002;
         public static final int app_name=0x7f060026;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
@@ -664,11 +664,11 @@ containing a value of this type.
         public static final int logScreen=0x7f06002e;
         public static final int login=0x7f060028;
         public static final int loginHint=0x7f060029;
-        public static final int not_correct_iden=0x7f060034;
-        public static final int not_login=0x7f060033;
-        public static final int not_login_and_password=0x7f060031;
-        public static final int not_network=0x7f060030;
-        public static final int not_password=0x7f060032;
+        public static final int no_correct_iden=0x7f060034;
+        public static final int no_login=0x7f060033;
+        public static final int no_login_and_password=0x7f060031;
+        public static final int no_network=0x7f060030;
+        public static final int no_password=0x7f060032;
         public static final int passwordHint=0x7f06002a;
         public static final int polluantDialogTxt=0x7f06002d;
         public static final int siteDialogTxt=0x7f06002b;

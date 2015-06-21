@@ -2,6 +2,7 @@ package com.ariaview;
 
 import android.widget.Button;
 
+//Execute PlayTask
 public class PlayThread extends Thread{
 
 	private Button mButton;
@@ -11,7 +12,6 @@ public class PlayThread extends Thread{
 	}
 	
 	 public void run() {
-		// mButton.performClick();
 		 PlayTask pt = new PlayTask();
 		 pt.setLabel(mButton);
 		 pt.execute();

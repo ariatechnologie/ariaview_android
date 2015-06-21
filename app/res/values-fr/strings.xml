@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AriaView</string>
     <string name="login">S\'identifier</string>
     <string name="loginHint">S \'identifier</string>
     <string name="passwordHint">Mot de passe</string>
     <string name="siteDialogTxt">Sites : </string>
     <string name="dateDialogTxt">Dates : </string>
+    <string name="polluantDialogTxt">Polluant : </string>
     <string name="logScreen">Page de connexion</string>
-    <string name="CheckBox">Mémoriser</string>
-    <string name="not_network">AriaView pas réussi à se connecter. S\'il vous plaît vérifier votre connexion Internet.</string>
-    <string name="not_login_and_password">Login et mot de passe est manquant.</string>
-    <string name="not_password">Mot de passe est manquant.</string>
-    <string name="not_login">Login  est manquant..</string>
-    <string name="not_correct_iden">Login ou mot de passe que vous avez entré est incorrect.</string> 
+    <string name="CheckBoxRemember">Mémoriser</string>
+    <string name="no_network">AriaView pas réussi à se connecter. S\'il vous plaît vérifier votre connexion Internet.</string>
+    <string name="no_login_and_password">Login et mot de passe est manquant.</string>
+    <string name="no_password">Mot de passe est manquant.</string>
+    <string name="no_login">Login  est manquant..</string>
+    <string name="no_correct_iden">Login ou mot de passe que vous avez entré est incorrect.</string> 
     <string name="title_menu_date">Changer date</string>
     <string name="title_menu_polluant">Changer polluant</string>
     <string name="title_menu_site">Changer site</string>
