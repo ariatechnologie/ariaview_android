@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_date"
+        android:icon="@drawable/dates"
+        android:showAsAction="ifRoom"
+        android:title="@string/title_menu_date"/>
+    <item
+        android:id="@+id/menu_polluant"
+        android:icon="@drawable/pollutant"
+        android:showAsAction="ifRoom"
+        android:title="@string/title_menu_polluant"/>
+    <item
+        android:id="@+id/menu_site"
+        android:icon="@drawable/sites"
+        android:showAsAction="ifRoom"
+        android:title="@string/title_menu_site"/>
+    <item
+        android:id="@+id/menu_deco"
+        android:icon="@drawable/ic_launcher"
+        android:showAsAction="never"
+        android:title="@string/title_menu_deco"/>
+
+</menu>

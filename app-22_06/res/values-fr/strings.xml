@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login">S\'identifier</string>
+    <string name="loginHint">S \'identifier</string>
+    <string name="passwordHint">Mot de passe</string>
+    <string name="siteDialogTxt">Sites : </string>
+    <string name="dateDialogTxt">Dates : </string>
+    <string name="polluantDialogTxt">Polluant : </string>
+    <string name="logScreen">Page de connexion</string>
+    <string name="CheckBoxRemember">Mémoriser</string>
+    <string name="no_network">AriaView pas réussi à se connecter. S\'il vous plaît vérifier votre connexion Internet.</string>
+    <string name="no_login_and_password">Login et mot de passe est manquant.</string>
+    <string name="no_password">Mot de passe est manquant.</string>
+    <string name="no_login">Login  est manquant..</string>
+    <string name="no_correct_iden">Login ou mot de passe que vous avez entré est incorrect.</string> 
+    <string name="title_menu_date">Changer date</string>
+    <string name="title_menu_polluant">Changer polluant</string>
+    <string name="title_menu_site">Changer site</string>
+    <string name="title_menu_deco">Déconnection</string>
+    <string name="title_menu_language">Langue</string>
+    <string name="decrementDate">-</string>
+    <string name="incrementDate">+</string>
+    <string name="ln_fr">Francais</string>
+    <string name="ln_en">Anglais</string>
+    <string name="ln_pt">Portugais</string>
+    <string name="ln_es">Espagnol</string>
+    <string name="ln_zh">Chinois</string>
+    
+</resources>

@@ -290,6 +290,8 @@ public class MainActivity extends Activity {
 
 			intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
+			intent.putExtra("model", model);
+			intent.putExtra("nest", nest);
 			intent.putExtra("fileKML", fileKML);
 			startActivity(intent);
 

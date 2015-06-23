@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_language"
+        android:icon="@drawable/language"
+        android:showAsAction="ifRoom"
+        android:title="@string/title_menu_language"/>
+   
+
+</menu>

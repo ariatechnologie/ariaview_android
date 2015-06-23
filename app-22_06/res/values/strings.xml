@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AriaView</string>
+    <string name="website">www.aria.fr</string>
+    <string name="login">Login</string>
+    <string name="loginHint">Login</string>
+    <string name="passwordHint">Password</string>
+    <string name="siteDialogTxt">Sites : </string>
+    <string name="dateDialogTxt">Dates : </string>
+    <string name="polluantDialogTxt">Polluant : </string>
+    <string name="logScreen">Login Screen</string>
+    <string name="CheckBoxRemember">Remember me</string>
+    <string name="no_network">AriaView failed to connect. Please check your Internet connection.</string>
+    <string name="no_login_and_password">Login and password is missing.</string>
+    <string name="no_password">Password is missing.</string>
+    <string name="no_login">Login is missing.</string>
+    <string name="no_correct_iden">Login or password you entered is incorrect.</string> 
+    <string name="title_menu_date">Change date</string>
+    <string name="title_menu_polluant">Change polluant</string>
+    <string name="title_menu_site">Change site</string>
+    <string name="title_menu_deco">Disconnection</string>
+    <string name="title_menu_language">Language</string>
+    <string name="decrementDate">-</string>
+    <string name="incrementDate">+</string>
+    <string name="ln_fr">French</string>
+    <string name="ln_en">English</string>
+    <string name="ln_pt">Portuguese</string>
+    <string name="ln_es">Spanish</string>
+    <string name="ln_zh">Chinese</string>
+    <string name="localisation">ARIA Technologies \n
+8-10 rue de la Ferme \n
+92100 Boulogne-Billancourt \n
+France \n
+Tél : +33 (0)1 46 08 68 60 \n
+Fax : +33 (0)1 41 41 93 17 \n</string>
+    
+</resources>
