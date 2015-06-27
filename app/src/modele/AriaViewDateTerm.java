@@ -13,6 +13,7 @@ public class AriaViewDateTerm implements Serializable {
 	private String endTimeSpan;
 	private String iconPath;
 	private String polluant;
+	private String polluant_id;
 	private String legendPath;
 
 	public AriaViewDateTerm() {
@@ -20,12 +21,13 @@ public class AriaViewDateTerm implements Serializable {
 	}
 
 	public AriaViewDateTerm(String beginTimeSpan, String endTimeSpan,
-			String iconPath, String polluant, String legendPath) {
+			String iconPath, String polluant, String legendPath, String polluant_id) {
 		this.beginTimeSpan = beginTimeSpan;
 		this.endTimeSpan = endTimeSpan;
 		this.iconPath = iconPath;
 		this.polluant = polluant;
 		this.legendPath = legendPath;
+		this.polluant_id = polluant_id;
 	}
 
 	public String getPolluant() {
@@ -66,6 +68,14 @@ public class AriaViewDateTerm implements Serializable {
 
 	public void setLegendPath(String legendPath) {
 		this.legendPath = legendPath;
+	}
+	
+	public String getPolluant_id() {
+		return polluant_id;
+	}
+
+	public void setPolluant_id(String polluant_id) {
+		this.polluant_id = polluant_id;
 	}
 
 	@Override

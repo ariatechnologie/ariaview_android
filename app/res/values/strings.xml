@@ -19,10 +19,13 @@
     <string name="title_menu_date">Change date</string>
     <string name="title_menu_polluant">Change polluant</string>
     <string name="title_menu_site">Change site</string>
+    <string name="title_menu_marker">Put marker</string>
+    <string name="title_menu_extract">Extract</string>
     <string name="title_menu_deco">Disconnection</string>
     <string name="title_menu_language">Language</string>
     <string name="decrementDate">-</string>
     <string name="incrementDate">+</string>
+    <string name="errorWebService">Web Service error</string>
     <string name="ln_fr">French</string>
     <string name="ln_en">English</string>
     <string name="ln_pt">Portuguese</string>

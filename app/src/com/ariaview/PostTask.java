@@ -60,7 +60,7 @@ class PostTask extends AsyncTask<String, Integer, String> {
         	writer.flush();
         	writer.close();
         	os.close();
-
+        	
             int responseCode=connection.getResponseCode();
         	
             if (responseCode == HttpsURLConnection.HTTP_OK) {
@@ -112,7 +112,6 @@ class PostTask extends AsyncTask<String, Integer, String> {
             result.append("=");
             result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
         }
-
         return result.toString();
     }
 }

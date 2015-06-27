@@ -1,9 +1,14 @@
 package com.ariaview;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -13,6 +18,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import modele.AriaViewDate;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
@@ -20,26 +27,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import modele.AriaViewDate;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore.Files;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +47,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class MapActivity extends Activity {
 
@@ -59,14 +72,17 @@ public class MapActivity extends Activity {
 	private AriaViewDate ariaViewDate;
 
 	private File ariaDirectory;
-	private Spinner dateSpinner;
 	private String url_ws_infosite = "http://web.aria.fr/webservices/ARIAVIEW/infosite.php";
+	private String url_ws_extract = "http://web.aria.fr/OpenDapServicesRESTAT/GridGetTimeSerieByPointDomainVariablePeriod";
+	private String model;
+	private String nest;
 
 	private Document document;
 	private DocumentBuilderFactory documentBuilderFactory;
 	private DocumentBuilder documentBuilder;
 
 	private Button incrementButton;
+	private Spinner dateSpinner;
 	private Button playButton;
 	private ImageView legendImageView;
 
@@ -78,6 +94,10 @@ public class MapActivity extends Activity {
 	private float zoom = 11;
 	private CameraPosition cameraPosition = new CameraPosition.Builder()
 			.target(new LatLng(0, 0)).zoom(zoom).build();
+
+	public final int NB_MARKER = 1;
+	public int currennt_nb_marker = 0;
+	public Marker marker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +119,8 @@ public class MapActivity extends Activity {
 				"AriaViewDate");
 		ariaViewDate.fillAriaViewDate((File) intent.getExtras()
 				.getSerializable("fileKML"));
+		model = intent.getStringExtra("model");
+		nest = intent.getStringExtra("nest");
 
 		dateSpinner = (Spinner) findViewById(R.id.spinnerDate);
 
@@ -124,6 +146,7 @@ public class MapActivity extends Activity {
 
 		});
 
+		// getExtract();
 		try {
 			// Loading map
 			initilizeMap();
@@ -274,6 +297,12 @@ public class MapActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.menu_marker:
+			placeMarker();
+			return true;
+		case R.id.menu_extract:
+			getExtract();
+			return true;
 		case R.id.menu_date:
 			dialogDates(ariaViewDate.getListDate());
 			return true;
@@ -448,5 +477,162 @@ public class MapActivity extends Activity {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void placeMarker() {
+
+		currennt_nb_marker = 0;
+		if (marker != null)
+			marker.remove();
+
+		googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+			@Override
+			public void onMapClick(LatLng point) {
+				if (currennt_nb_marker < NB_MARKER) {
+					currennt_nb_marker++;
+					MarkerOptions markerOptions = new MarkerOptions().position(
+							new LatLng(point.latitude, point.longitude)).title(
+							"Marker N" + MapActivity.this.currennt_nb_marker);
+					marker = googleMap.addMarker(markerOptions);
+				}
+			}
+		});
+
+	}
+
+	private void getExtract() {
+		//
+		model = "CHIMERE";
+		nest = "p02";
+
+		if (marker != null) {
+			double latitude = marker.getPosition().latitude;
+			double longitude = marker.getPosition().longitude;
+			String domainid = "_LENVIS_"
+					+ model
+					+ "_"
+					+ ariaViewDate.getSitesTabString()[ariaViewDate
+							.getCurrentSite()] + "_reference_" + nest
+					+ "_dataset";
+			String variableid = ariaViewDate.getListAriaViewDateTerm()
+					.get(ariaViewDate.getCurrentAriaViewDateTerm())
+					.getPolluant_id();
+			String startdate = ariaViewDate.getListAriaViewDateTerm()
+					.get(0)
+					.getBeginTimeSpan();
+			String enddate = ariaViewDate.getListAriaViewDateTerm()
+					.get(ariaViewDate.getListAriaViewDateTerm().size()-1)
+					.getEndTimeSpan();
+
+			//
+			startdate = startdate.replace("T", " ").substring(0,
+					startdate.length() - 6);
+			enddate = enddate.replace("T", " ").substring(0,
+					enddate.length() - 6);
+
+			// url_ws_extract
+			if (domainid != null && variableid != null && startdate != null
+					&& enddate != null) {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						6);
+				nameValuePairs.add(new BasicNameValuePair("longitude", Double
+						.toString(longitude)));
+				nameValuePairs.add(new BasicNameValuePair("latitude", Double
+						.toString(latitude)));
+				nameValuePairs
+						.add(new BasicNameValuePair("domainid", domainid));
+				nameValuePairs.add(new BasicNameValuePair("variableid",
+						variableid));
+				nameValuePairs.add(new BasicNameValuePair("startdate",
+						startdate));
+				nameValuePairs.add(new BasicNameValuePair("enddate", enddate));
+
+//				 System.out.println(nameValuePairs.get(0));
+//				 System.out.println(nameValuePairs.get(1));
+//				 System.out.println(nameValuePairs.get(2));
+//				 System.out.println(nameValuePairs.get(3));
+//				 System.out.println(nameValuePairs.get(4));
+//				 System.out.println(nameValuePairs.get(5));
+
+				File fileJSON = new File(ariaDirectory, "extract.json");
+
+				PostTask postTask = new PostTask(MapActivity.this,
+						nameValuePairs, "extract.json");
+				try {
+					postTask.execute(url_ws_extract).get();
+
+					String contentsJson = readFile(fileJSON);
+					
+						
+					if(!contentsJson.contentEquals("Exception null"))
+					{
+						Map<String, Float> dataValuesFieldMap = parseJsonData(contentsJson);
+//						Intent intent = new Intent(this, GraphViewActivity.class);
+//						intent.putExtra("dataValuesFieldMap", dataValuesFieldMap);
+//						intent.putExtra("variableid",variableid);
+//						intent.putExtra("startdate", startdate);
+//						intent.putExtra("site", ariaViewDate.getSitesTabString()[ariaViewDate.getCurrentSite()]);
+//						intent.putExtra("latitude", latitude);
+//						intent.putExtra("longitude", longitude);
+//						
+//						startActivity(intent);
+					}
+					else
+						Toast.makeText(MapActivity.this,
+								getResources().getString(R.string.errorWebService),
+								Toast.LENGTH_LONG).show();
+
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	public HashMap<String, Float> parseJsonData(String json) {
+		JsonParser parser = new JsonParser();
+		HashMap<String, Float> parsed = new HashMap<String, Float>();
+		// Converts the string in json object
+		JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+
+		// Recuperates the object GetDataResult
+		JsonObject dataResult = jsonObject.getAsJsonObject("GetDataResult");
+
+		// Table recovered dataValuesField contained in the object GetDataResult
+		JsonArray dataValues = dataResult.getAsJsonArray("dataValuesField");
+
+		// Inserting table data in the map
+		for (JsonElement item : dataValues) {
+			JsonObject obj = item.getAsJsonObject();
+			parsed.put(
+					obj.get("dateTimeField").getAsString()
+							.replaceAll("[^x0-9]", ""), obj.get("valueField")
+							.getAsFloat());
+		}
+		return parsed;
+	}
+
+	public static String readFile(File file) throws IOException {
+		int len;
+		char[] chr = new char[4096];
+		final StringBuffer buffer = new StringBuffer();
+		final FileReader reader = new FileReader(file);
+		try {
+			while ((len = reader.read(chr)) > 0) {
+				buffer.append(chr, 0, len);
+			}
+		} finally {
+			reader.close();
+		}
+		return buffer.toString();
 	}
 }

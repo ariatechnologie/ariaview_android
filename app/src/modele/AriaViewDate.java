@@ -272,6 +272,7 @@ public class AriaViewDate implements Serializable {
 
 			NodeList contentFolderNodeList;
 			String polluant = "";
+			String polluant_id = "";
 			String beginTimeSpan = "";
 			String endTimeSpan = "";
 			String iconPath = "";
@@ -282,6 +283,7 @@ public class AriaViewDate implements Serializable {
 			for (int i = 0; i < folderNodeList.getLength(); i++) {
 				if (folderNodeList.item(i).getChildNodes().item(5)
 						.getNodeName().equals("ScreenOverlay")) {
+					polluant_id = folderNodeList.item(i).getChildNodes().item(1).getTextContent();
 					contentFolderNodeList = folderNodeList.item(i)
 							.getChildNodes();
 					legendPath = URLEncoder.encode(
@@ -315,7 +317,7 @@ public class AriaViewDate implements Serializable {
 
 						listAriaViewDateTerm.add(new AriaViewDateTerm(
 								beginTimeSpan, endTimeSpan, iconPath, polluant,
-								legendPath));
+								legendPath,polluant_id));
 					}
 				}
 			}
