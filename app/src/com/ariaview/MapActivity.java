@@ -5,10 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,7 +33,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.MediaStore.Files;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +95,13 @@ public class MapActivity extends Activity {
 	public int currennt_nb_marker = 0;
 	public Marker marker;
 
+	private long[] dataValuesFieldKey;
+	private float[] dataValuesFieldValue;
+	private ArrayList<Long> dataValuesFieldListKey = new ArrayList<Long>();
+	private ArrayList<Float> dataValuesFieldListValue = new ArrayList<Float>();
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -548,13 +551,6 @@ public class MapActivity extends Activity {
 						startdate));
 				nameValuePairs.add(new BasicNameValuePair("enddate", enddate));
 
-//				 System.out.println(nameValuePairs.get(0));
-//				 System.out.println(nameValuePairs.get(1));
-//				 System.out.println(nameValuePairs.get(2));
-//				 System.out.println(nameValuePairs.get(3));
-//				 System.out.println(nameValuePairs.get(4));
-//				 System.out.println(nameValuePairs.get(5));
-
 				File fileJSON = new File(ariaDirectory, "extract.json");
 
 				PostTask postTask = new PostTask(MapActivity.this,
@@ -567,16 +563,28 @@ public class MapActivity extends Activity {
 						
 					if(!contentsJson.contentEquals("Exception null"))
 					{
-						Map<String, Float> dataValuesFieldMap = parseJsonData(contentsJson);
-//						Intent intent = new Intent(this, GraphViewActivity.class);
-//						intent.putExtra("dataValuesFieldMap", dataValuesFieldMap);
-//						intent.putExtra("variableid",variableid);
-//						intent.putExtra("startdate", startdate);
-//						intent.putExtra("site", ariaViewDate.getSitesTabString()[ariaViewDate.getCurrentSite()]);
-//						intent.putExtra("latitude", latitude);
-//						intent.putExtra("longitude", longitude);
-//						
-//						startActivity(intent);
+						parseJsonData(contentsJson);
+						
+						dataValuesFieldKey = new long[dataValuesFieldListKey.size()];
+						dataValuesFieldValue = new float[dataValuesFieldListValue.size()];
+						
+						for(int i = 0; i<dataValuesFieldListKey.size();i++){
+							dataValuesFieldKey[i] = dataValuesFieldListKey.get(i);
+							dataValuesFieldValue[i] = dataValuesFieldListValue.get(i);
+						}
+						
+						Intent intent = new Intent(this, GraphViewActivity.class);
+						intent.putExtra("dataValuesFieldMapKey", dataValuesFieldKey);
+						intent.putExtra("dataValuesFieldMapValue", dataValuesFieldValue);
+						intent.putExtra("polluant",ariaViewDate.getListAriaViewDateTerm()
+								.get(ariaViewDate.getCurrentAriaViewDateTerm())
+								.getPolluant());
+						intent.putExtra("startdate", startdate);
+						intent.putExtra("site", ariaViewDate.getSitesTabString()[ariaViewDate.getCurrentSite()]);
+						intent.putExtra("latitude", latitude);
+						intent.putExtra("longitude", longitude);
+						
+						startActivity(intent);
 					}
 					else
 						Toast.makeText(MapActivity.this,
@@ -598,9 +606,9 @@ public class MapActivity extends Activity {
 		}
 	}
 
-	public HashMap<String, Float> parseJsonData(String json) {
+	public void parseJsonData(String json) {
 		JsonParser parser = new JsonParser();
-		HashMap<String, Float> parsed = new HashMap<String, Float>();
+		
 		// Converts the string in json object
 		JsonObject jsonObject = parser.parse(json).getAsJsonObject();
 
@@ -609,16 +617,20 @@ public class MapActivity extends Activity {
 
 		// Table recovered dataValuesField contained in the object GetDataResult
 		JsonArray dataValues = dataResult.getAsJsonArray("dataValuesField");
-
+		
+		dataValuesFieldKey = new long[dataValues.size()];
+		dataValuesFieldValue = new float[dataValues.size()];
+		
 		// Inserting table data in the map
 		for (JsonElement item : dataValues) {
 			JsonObject obj = item.getAsJsonObject();
-			parsed.put(
-					obj.get("dateTimeField").getAsString()
-							.replaceAll("[^x0-9]", ""), obj.get("valueField")
-							.getAsFloat());
+
+			if(!dataValuesFieldListKey.contains(Long.parseLong(obj.get("dateTimeField").getAsString().replaceAll("[^x0-9]", "")))){
+				dataValuesFieldListKey.add(Long.parseLong(obj.get("dateTimeField").getAsString().replaceAll("[^x0-9]", "")));
+				dataValuesFieldListValue.add(obj.get("valueField").getAsFloat());
+			}
 		}
-		return parsed;
+		
 	}
 
 	public static String readFile(File file) throws IOException {
