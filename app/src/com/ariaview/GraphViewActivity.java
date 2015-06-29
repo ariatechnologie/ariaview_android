@@ -46,8 +46,7 @@ private String title;
 		title = polluant+" "+startdate.split(" ")[0]+" ("+Math.round(latitude*10000.0)/10000.0+","+Math.round(longitude*10000.0)/10000.0+")";
 		
 		setTitle(title);
-		DataPoint[] dataPoint = new DataPoint[46];
-		//DataPoint[] dataPoint = new DataPoint[dataValuesFieldMapKey.length];
+		DataPoint[] dataPoint = new DataPoint[dataValuesFieldMapKey.length];
 		Double value;
 		int i = 0;
 		long date_milliseconds;
@@ -56,7 +55,6 @@ private String title;
 		double mh;
 		
 		for(long date: dataValuesFieldMapKey){
-			if(i<46){
 				date_milliseconds = date;
 				m = (double) ((date_milliseconds / (1000*60)) % 60);
 				h = (int) ((date_milliseconds / (1000*60*60)) % 24);
@@ -71,7 +69,7 @@ private String title;
 					dataPoint[i] = new DataPoint(mh,0);
 				else
 					dataPoint[i] = new DataPoint(mh,value);
-			}
+			
 			i++;
 		}
 		

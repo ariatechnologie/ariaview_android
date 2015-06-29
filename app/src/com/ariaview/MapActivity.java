@@ -316,7 +316,10 @@ public class MapActivity extends Activity {
 			dialogSite(ariaViewDate.getSitesTabString());
 			return true;
 		case R.id.menu_deco:
-			finish();
+			Intent intent = new Intent(getBaseContext(), MainActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -417,18 +420,24 @@ public class MapActivity extends Activity {
 					.getTextContent();
 			String datefile = document.getElementsByTagName("datefile").item(0)
 					.getTextContent();
-			String model = document.getElementsByTagName("model").item(0)
+			String type = document.getElementsByTagName("type").item(0)
 					.getTextContent();
 			String site = document.getElementsByTagName("site").item(0)
 					.getTextContent();
-			String nest = document.getElementsByTagName("nest").item(0)
+			String scale = document.getElementsByTagName("scale").item(0)
+					.getTextContent();
+			String model = document.getElementsByTagName("model").item(0)
+					.getTextContent(); 
+			String nest =  document.getElementsByTagName("nest").item(0)
 					.getTextContent();
 
+			
+			
 			DownloadTask downloadTaskDateFile = new DownloadTask(
 					MapActivity.this);
 			downloadTaskDateFile.execute(
-					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-							+ nest + "/" + datefile).get();
+					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
+							+ scale + "/" + datefile).get();
 
 			fileXML = new File(ariaDirectory, datefile);
 
@@ -452,19 +461,21 @@ public class MapActivity extends Activity {
 
 			DownloadTask downloadTaskKml = new DownloadTask(MapActivity.this);
 			downloadTaskKml.execute(
-					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-							+ nest + "/" + date + "/" + date + ".kml").get();
+					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
+							+ scale + "/" + date + "/" + date + ".kml").get();
 
 			File fileKML = new File(ariaDirectory, date + ".kml");
 
 			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/"
-					+ model + "_" + nest + "/", currentDate, currentSite,
+					+ type + "_" + scale + "/", currentDate, currentSite,
 					listDate, ariaViewDate.getSitesTabString(), nameValuePairs
 							.get(0).getValue(), nameValuePairs.get(1)
 							.getValue());
 
 			Intent intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
+			intent.putExtra("model", model);
+			intent.putExtra("nest", nest);
 			intent.putExtra("fileKML", fileKML);
 
 			startActivity(intent);
@@ -505,10 +516,7 @@ public class MapActivity extends Activity {
 	}
 
 	private void getExtract() {
-		//
-		model = "CHIMERE";
-		nest = "p02";
-
+	
 		if (marker != null) {
 			double latitude = marker.getPosition().latitude;
 			double longitude = marker.getPosition().longitude;

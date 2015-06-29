@@ -65,9 +65,9 @@ public class MainActivity extends Activity {
 	private String host;
 	private String url;
 	private String datefile;
-	private String model;
+	private String type;
 	private String site;
-	private String nest;
+	private String scale;
 
 	private Document document;
 	private DocumentBuilderFactory documentBuilderFactory;
@@ -246,18 +246,23 @@ public class MainActivity extends Activity {
 			url = document.getElementsByTagName("url").item(0).getTextContent();
 			datefile = document.getElementsByTagName("datefile").item(0)
 					.getTextContent();
-			model = document.getElementsByTagName("model").item(0)
+			type = document.getElementsByTagName("type").item(0)
 					.getTextContent();
 			site = document.getElementsByTagName("site").item(0)
 					.getTextContent();
-			nest = document.getElementsByTagName("nest").item(0)
+			scale = document.getElementsByTagName("scale").item(0)
 					.getTextContent();
-
+			String model = document.getElementsByTagName("model").item(0)
+					.getTextContent(); 
+			String nest =  document.getElementsByTagName("nest").item(0)
+					.getTextContent();
+			
+			
 			DownloadTask downloadTaskDateFile = new DownloadTask(
 					MainActivity.this);
 			downloadTaskDateFile.execute(
-					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-							+ nest + "/" + datefile).get();
+					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
+							+ scale + "/" + datefile).get();
 
 			fileXML = new File(ariaDirectory, datefile);
 
@@ -276,14 +281,14 @@ public class MainActivity extends Activity {
 
 			DownloadTask downloadTaskKml = new DownloadTask(MainActivity.this);
 			downloadTaskKml.execute(
-					host + "/" + url + "/" + site + "/GEARTH/" + model + "_"
-							+ nest + "/" + lastDate + "/" + lastDate + ".kml")
+					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
+							+ scale + "/" + lastDate + "/" + lastDate + ".kml")
 					.get();
 
 			File fileKML = new File(ariaDirectory, lastDate + ".kml");
 
 			ariaViewDate = new AriaViewDate(host + "/" + url + "/", "/GEARTH/"
-					+ model + "_" + nest + "/", listDate.size() - 1,
+					+ type + "_" + scale + "/", listDate.size() - 1,
 					currentSite, listDate, sitesTabString, nameValuePairs
 							.get(0).getValue(), nameValuePairs.get(1)
 							.getValue());
