@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,9 +31,11 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,6 +108,17 @@ public class MapActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		 if(getIntent().hasExtra("locale")){
+				Resources res = MapActivity.this.getResources();
+				// Change locale settings in the app.
+				DisplayMetrics dm = res.getDisplayMetrics();
+				android.content.res.Configuration conf = res
+						.getConfiguration();
+				conf.locale = new Locale(getIntent().getStringExtra("locale"));
+				res.updateConfiguration(conf, dm);
+			}
+		 
 		setContentView(R.layout.activity_map);
 
 		ariaDirectory = new File(getFilesDir(), "AriaView");
@@ -160,6 +174,7 @@ public class MapActivity extends Activity {
 
 	}
 
+	
 	// Refresh Spinner List
 	private void setDateSpinner() {
 		dataAdapter.clear();

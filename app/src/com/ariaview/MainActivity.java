@@ -80,7 +80,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		init();
+	}
 
+	public void init(){
 		ariaDirectory = new File(getFilesDir(), "AriaView");
 		ariaDirectory.mkdirs();
 
@@ -102,9 +106,8 @@ public class MainActivity extends Activity {
 			checkBoxRemember.setChecked(true);
 		} else
 			currentUser = new User();
-
 	}
-
+	
 	public void onClickLogin(View v) throws SAXException, IOException {
 
 		if (!checkInput()) {
@@ -298,6 +301,9 @@ public class MainActivity extends Activity {
 			intent.putExtra("model", model);
 			intent.putExtra("nest", nest);
 			intent.putExtra("fileKML", fileKML);
+			if(getIntent().hasExtra("locale"))
+				intent.putExtra("locale",getIntent().getStringExtra("locale"));
+				
 			startActivity(intent);
 
 		} catch (ParserConfigurationException e) {
@@ -430,8 +436,9 @@ public class MainActivity extends Activity {
 						conf.locale = new Locale(ln);
 						res.updateConfiguration(conf, dm);
 						dialog.dismiss();
+						
 						finish();
-						startActivity(getIntent());
+						startActivity(getIntent().putExtra("locale", ln));
 					}
 
 				});
