@@ -8,12 +8,16 @@ import java.io.IOException;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer.LegendAlign;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,12 +42,12 @@ private String title;
 		long[] dataValuesFieldMapKey = intent.getLongArrayExtra("dataValuesFieldMapKey");
 		float[] dataValuesFieldMapValue = intent.getFloatArrayExtra("dataValuesFieldMapValue");
 		String polluant = intent.getStringExtra("polluant");
-		String startdate = intent.getStringExtra("startdate");
-		String site = intent.getStringExtra("site");
+		final String startdate = intent.getStringExtra("startdate").split(" ")[0];
+		final String site = intent.getStringExtra("site");
 		double latitude = intent.getDoubleExtra("latitude", 0);
 		double longitude = intent.getDoubleExtra("longitude",0);
 
-		title = polluant+" "+startdate.split(" ")[0]+" ("+Math.round(latitude*10000.0)/10000.0+","+Math.round(longitude*10000.0)/10000.0+")";
+		title = polluant+" "+startdate+" ("+Math.round(latitude*10000.0)/10000.0+","+Math.round(longitude*10000.0)/10000.0+")";
 		
 		setTitle(title);
 		DataPoint[] dataPoint = new DataPoint[dataValuesFieldMapKey.length];
@@ -81,10 +85,23 @@ private String title;
 		
 		LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoint);
 		series.setTitle(site);
+		series.setColor(Color.RED);
+		series.setOnDataPointTapListener(new OnDataPointTapListener() {
+			
+		    @Override
+		    public void onTap(Series series, DataPointInterface dataPoint) {
+		        Toast.makeText(GraphViewActivity.this, startdate+" "+dataPoint.getX() + "h\n"+site+" : "+dataPoint.getY(), Toast.LENGTH_LONG).show();
+		    }
+
+		});
+		
+		
 		graph.getLegendRenderer().setVisible(true);
 		graph.getLegendRenderer().setAlign(LegendAlign.TOP);
+		graph.getGridLabelRenderer().setHorizontalAxisTitle("Hour");
+		graph.getGridLabelRenderer().setVerticalAxisTitle(polluant);		
 		graph.addSeries(series);
-		
+
 	}
 	
 	@Override
