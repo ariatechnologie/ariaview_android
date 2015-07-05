@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="login">Entrar</string>
-    <string name="loginHint">Entrar</string>
+	<string name="login">Login (usuário)</string>
+    <string name="loginHint">Login (usuário)</string>
     <string name="passwordHint">Senha</string>
     <string name="siteDialogTxt">Locais : </string>
     <string name="dateDialogTxt">Datas : </string>
@@ -10,21 +10,24 @@
     <string name="logScreen">Tela de login</string>
     <string name="CheckBoxRemember">Memorizar</string>
     <string name="no_network">AriaView falhou ao conectar. Por favor, verifique sua conexão com a Internet.</string>
-    <string name="no_login_and_password">Login and password is missing.</string>
-    <string name="no_password">Faça login e senha está faltando.</string>
-    <string name="no_login">Entrar está faltando.</string>
-    <string name="no_correct_iden">Login ou senha está incorreta Você entrou.</string> 
-    <string name="title_menu_date">Mudança de data</string>
-    <string name="title_menu_polluant">Mudança poluentes</string>
-    <string name="title_menu_site">Mudança site</string>
+    <string name="no_login_and_password">Login e senha estão faltando.</string>
+    <string name="no_password">Senha está faltando.</string>
+    <string name="no_login">Login está faltando.</string>
+    <string name="no_correct_iden">Senha ou login (usuário) que você inseriu está incorreto.</string> 
+    <string name="title_menu_date">Alterar data</string>
+    <string name="title_menu_polluant">Alterar poluentes</string>
+    <string name="title_menu_site">Alterar local</string>
+	<string name="title_menu_marker">Inserir marcador</string>
+    <string name="title_menu_extract">Extrair</string>
     <string name="title_menu_deco">Desconexão</string>
-    <string name="title_menu_language">Língua</string>
+    <string name="title_menu_language">Idioma</string>
     <string name="decrementDate">-</string>
     <string name="incrementDate">+</string>
+	<string name="errorWebService">Erro de Serviço Web</string>
     <string name="ln_fr">Francês</string>
     <string name="ln_en">Inglês</string>
     <string name="ln_pt">Português</string>
-    <string name="ln_es">Espagnol</string>
+    <string name="ln_es">Espanhol</string>
     <string name="ln_zh">Chinês</string>
     
 </resources>

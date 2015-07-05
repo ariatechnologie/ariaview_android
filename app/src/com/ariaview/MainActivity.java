@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import modele.AriaViewDate;
+import modele.Item;
 import modele.User;
 
 import org.apache.http.NameValuePair;
@@ -37,8 +38,12 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //Main Activity, Login Page
@@ -75,10 +80,31 @@ public class MainActivity extends Activity {
 	private NodeList sitesNodeList;
 	private String[] sitesTabString;
 	private File ariaDirectory;
+	
+	private Item[] items;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		 if(getIntent().hasExtra("locale")){
+				Resources res = MainActivity.this.getResources();
+				// Change locale settings in the app.
+				DisplayMetrics dm = res.getDisplayMetrics();
+				android.content.res.Configuration conf = res
+						.getConfiguration();
+				conf.locale = new Locale(getIntent().getStringExtra("locale"));
+				res.updateConfiguration(conf, dm);
+			}
+
+			items = new Item[] {
+				    new Item(getResources().getString(R.string.ln_en), getResources().getDrawable(R.drawable.gb)),
+				    new Item(getResources().getString(R.string.ln_es), getResources().getDrawable(R.drawable.es)),
+				    new Item(getResources().getString(R.string.ln_fr), getResources().getDrawable(R.drawable.fr)),
+					new Item(getResources().getString(R.string.ln_pt), getResources().getDrawable(R.drawable.br)),
+					new Item(getResources().getString(R.string.ln_zh), getResources().getDrawable(R.drawable.cn))
+			};
+			
 		setContentView(R.layout.activity_main);
 		
 		init();
@@ -401,18 +427,30 @@ public class MainActivity extends Activity {
 
 	private void dialogLanguage() {
 
-		String[] tabStringLanguage = {
-				getResources().getString(R.string.ln_en),
-				getResources().getString(R.string.ln_es),
-				getResources().getString(R.string.ln_fr),
-				getResources().getString(R.string.ln_pt),
-				getResources().getString(R.string.ln_zh)
+		ListAdapter adapter = new ArrayAdapter<Item>(
+			    this,
+			    android.R.layout.select_dialog_item,
+			    android.R.id.text1,
+			    items){
+			        public View getView(int position, View convertView, ViewGroup parent) {
+			            //User super class to create the View
+			            View v = super.getView(position, convertView, parent);
+			            TextView tv = (TextView)v.findViewById(android.R.id.text1);
 
-		};
+			            //Put the image on the TextView
+			            tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, null, null, null);
+
+			            //Add margin between image and text (support various screen densities)
+			            int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+			            tv.setCompoundDrawablePadding(dp5);
+
+			            return v;
+			        }
+			    };
 
 		AlertDialog.Builder builder = new Builder(this).setTitle(
 				getResources().getString(R.string.title_menu_language))
-				.setItems(tabStringLanguage, new OnClickListener() {
+				.setAdapter(adapter, new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
 
@@ -428,13 +466,6 @@ public class MainActivity extends Activity {
 						else if (which == 4)
 							ln = "zh";
 
-						Resources res = MainActivity.this.getResources();
-						// Change locale settings in the app.
-						DisplayMetrics dm = res.getDisplayMetrics();
-						android.content.res.Configuration conf = res
-								.getConfiguration();
-						conf.locale = new Locale(ln);
-						res.updateConfiguration(conf, dm);
 						dialog.dismiss();
 						
 						finish();
@@ -442,7 +473,7 @@ public class MainActivity extends Activity {
 					}
 
 				});
-
+		
 		builder.show();
 
 	}

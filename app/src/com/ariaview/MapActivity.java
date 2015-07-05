@@ -333,6 +333,8 @@ public class MapActivity extends Activity {
 		case R.id.menu_deco:
 			Intent intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			if(getIntent().hasExtra("locale"))
+				intent.putExtra("locale",getIntent().getStringExtra("locale"));
 			startActivity(intent);
 			
 			return true;
@@ -492,7 +494,9 @@ public class MapActivity extends Activity {
 			intent.putExtra("model", model);
 			intent.putExtra("nest", nest);
 			intent.putExtra("fileKML", fileKML);
-
+			if(getIntent().hasExtra("locale"))
+				intent.putExtra("locale",getIntent().getStringExtra("locale"));
+			
 			startActivity(intent);
 
 		} catch (ParserConfigurationException e) {
@@ -606,7 +610,6 @@ public class MapActivity extends Activity {
 						intent.putExtra("site", ariaViewDate.getSitesTabString()[ariaViewDate.getCurrentSite()]);
 						intent.putExtra("latitude", latitude);
 						intent.putExtra("longitude", longitude);
-						
 						startActivity(intent);
 					}
 					else
