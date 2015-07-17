@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-import modele.AriaViewDate;
-
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer.LegendAlign;
 import com.jjoe64.graphview.series.DataPoint;
@@ -32,19 +30,18 @@ import android.view.View;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
-
+//Graph Activity 
 public class GraphViewActivity extends Activity {
 
 private ShareActionProvider mShareActionProvider;
 private String title;
-private double x_select = 0;
-private AriaViewDate ariaViewDate;
 private long[] dataValuesFieldMapKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//Get Language
 		 if(getIntent().hasExtra("locale")){
 				Resources res = GraphViewActivity.this.getResources();
 				// Change locale settings in the app.
@@ -57,6 +54,7 @@ private long[] dataValuesFieldMapKey;
 		 
 		setContentView(R.layout.activity_graph_view);
 		
+		//Recup Data From Intent
 		Intent intent = getIntent();
 		dataValuesFieldMapKey = intent.getLongArrayExtra("dataValuesFieldMapKey");
 		float[] dataValuesFieldMapValue = intent.getFloatArrayExtra("dataValuesFieldMapValue");
@@ -65,8 +63,6 @@ private long[] dataValuesFieldMapKey;
 		final String site = intent.getStringExtra("site");
 		double latitude = intent.getDoubleExtra("latitude", 0);
 		double longitude = intent.getDoubleExtra("longitude",0);
-		//ariaViewDate = (AriaViewDate) intent.getExtras().getSerializable(
-		//		"AriaViewDate");
 		title = polluant+" "+startdate+" ("+Math.round(latitude*10000.0)/10000.0+","+Math.round(longitude*10000.0)/10000.0+")";
 		
 		setTitle(title);
@@ -78,6 +74,7 @@ private long[] dataValuesFieldMapKey;
 		int h;
 		double mh;
 		
+		//Fill array dataPoint for display Graph View
 		for(long date: dataValuesFieldMapKey){
 				date_milliseconds = date;
 				m = (double) ((date_milliseconds / (1000*60)) % 60);
@@ -97,6 +94,7 @@ private long[] dataValuesFieldMapKey;
 			i++;
 		}
 		
+		//Build GraphView
 		GraphView graph = (GraphView) findViewById(R.id.graph);
 		graph.getViewport().setXAxisBoundsManual(true);
 		graph.getViewport().setMinX(0);
@@ -112,8 +110,6 @@ private long[] dataValuesFieldMapKey;
 			@Override
 		    public void onTap(Series series, DataPointInterface dataPoint) {
 		        Toast.makeText(GraphViewActivity.this, startdate+" "+dataPoint.getX() + "h\n"+site+" : "+dataPoint.getY(), Toast.LENGTH_LONG).show();
-		        x_select = dataPoint.getX();
-		      //  goTo();
 		    }
 
 		});
@@ -127,53 +123,24 @@ private long[] dataValuesFieldMapKey;
 
 	}
 	
-	public void goTo(){
-		
-		int i = 0;
-		long date_milliseconds;
-		double m;
-		int h;
-		double mh;
-		int currentAriaViewDateTerm = 0;
-		
-		for(long date: dataValuesFieldMapKey){
-			date_milliseconds = date;
-			m = (double) ((date_milliseconds / (1000*60)) % 60);
-			h = (int) ((date_milliseconds / (1000*60*60)) % 24);
-			
-			if(m == 30)
-				m = 0.5;
-				
-			mh = h+m;
-		
-			if(mh == x_select)
-				currentAriaViewDateTerm = i;
-			i++;
-		}
-		
-		System.out.println(ariaViewDate.getListAriaViewDateTerm().get(currentAriaViewDateTerm));
-		
-	}
-	
-	
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
  
-        /** Inflating the current activity's menu with res/menu/items.xml */
+        // Inflating the current activity's menu with res/menu/items.xml
         getMenuInflater().inflate(R.menu.menu_graph, menu);
  
-        /** Getting the actionprovider associated with the menu item whose id is share */
+        // Getting the actionprovider associated with the menu item whose id is share
         mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.menu_item_share).getActionProvider();
  
-        /** Setting a share intent */
+        // Setting a share intent
         mShareActionProvider.setShareIntent(getDefaultShareIntent());
  
         return super.onCreateOptionsMenu(menu);
  
     }
  
-    /** Returns a share intent */
+    // Returns a share intent
     private Intent getDefaultShareIntent(){
     	takeScreenshot();
     	
@@ -194,6 +161,7 @@ private long[] dataValuesFieldMapKey;
         return intent;
     }
 	
+    //Take the picture of Graph
     public void takeScreenshot() {
     	
     	   View rootView = getWindow().getDecorView();

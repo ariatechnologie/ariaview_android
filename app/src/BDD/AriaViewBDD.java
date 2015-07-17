@@ -45,6 +45,7 @@ public class AriaViewBDD {
 		return bdd;
 	}
 
+	//insert new user with User object
 	public long insertUser(User user) {
 
 		ContentValues values = new ContentValues();
@@ -56,6 +57,7 @@ public class AriaViewBDD {
 		return bdd.insert(TABLE_USER, null, values);
 	}
 
+	//update user with user id and User object
 	public int updateUser(int id, User user) {
 
 		ContentValues values = new ContentValues();
@@ -67,6 +69,7 @@ public class AriaViewBDD {
 		return bdd.update(TABLE_USER, values, COL_ID + " = " + id, null);
 	}
 
+	//return all user
 	public List<User> getUser() {
 		List<User> User = new ArrayList<User>();
 
@@ -82,6 +85,7 @@ public class AriaViewBDD {
 		return User;
 	}
 
+	//return User with user id
 	public User getUserWithId(int id) {
 
 		Cursor c = bdd.query(TABLE_USER, new String[] { COL_ID, COL_LOGIN,
@@ -90,6 +94,7 @@ public class AriaViewBDD {
 		return cursorToUser(c);
 	}
 
+	//Get Cursor Set a User and return User
 	private User cursorToUser(Cursor c) {
 
 		if (c.getCount() == 0)
@@ -109,6 +114,7 @@ public class AriaViewBDD {
 		return user;
 	}
 
+	//Delete All User
 	public void clearUser() {
 		String query = "DELETE FROM " + TABLE_USER;
 

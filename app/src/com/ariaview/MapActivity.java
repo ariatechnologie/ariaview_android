@@ -109,6 +109,7 @@ public class MapActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//Get Language
 		 if(getIntent().hasExtra("locale")){
 				Resources res = MapActivity.this.getResources();
 				// Change locale settings in the app.
@@ -131,6 +132,7 @@ public class MapActivity extends Activity {
 
 		documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
+		//Get data from last Intent
 		Intent intent = getIntent();
 		ariaViewDate = (AriaViewDate) intent.getExtras().getSerializable(
 				"AriaViewDate");
@@ -139,6 +141,7 @@ public class MapActivity extends Activity {
 		model = intent.getStringExtra("model");
 		nest = intent.getStringExtra("nest");
 
+		//List Date
 		dateSpinner = (Spinner) findViewById(R.id.spinnerDate);
 
 		dataAdapter = new ArrayAdapter<String>(this,
@@ -192,6 +195,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//Set cameraPosition, add legend image and main image
 	private void readMap() {
 		setDateSpinner();
 
@@ -209,16 +213,17 @@ public class MapActivity extends Activity {
 				.newCameraPosition(cameraPosition));
 
 		try {
-
+			//Get Legend
 			String pathLegend = ariaViewDate.getAllPath()
 					+ ariaViewDate.getListAriaViewDateTerm()
 							.get(ariaViewDate.getCurrentAriaViewDateTerm())
 							.getLegendPath();
-
+			//Download Legend Image
 			DownloadTask downloadTaskLegend = new DownloadTask(MapActivity.this);
 
 			downloadTaskLegend.execute(pathLegend).get();
 
+			//Get Path of legend Image
 			File pngLegend = new File(ariaDirectory, ariaViewDate
 					.getListAriaViewDateTerm()
 					.get(ariaViewDate.getCurrentAriaViewDateTerm())
@@ -227,17 +232,20 @@ public class MapActivity extends Activity {
 			if (pngLegend.exists()) {
 				legendImageView.setImageBitmap(BitmapFactory
 						.decodeFile(pngLegend.getAbsolutePath()));
-				legendImageView.setAlpha(75);
+				legendImageView.setAlpha(75); // Opacity
 			}
 
+			//Get Main Image
 			String nameFileIcon = ariaViewDate.getListAriaViewDateTerm()
 					.get(ariaViewDate.getCurrentAriaViewDateTerm())
 					.getIconPath();
 
 			String pathIcon = ariaViewDate.getAllPath() + nameFileIcon;
 
+			//Download Main Image
 			DownloadTask downloadTaskIcon = new DownloadTask(MapActivity.this);
 
+			//Get Path of Main Image
 			downloadTaskIcon.execute(pathIcon).get();
 
 			File pngIcon = new File(ariaDirectory, nameFileIcon);
@@ -249,7 +257,7 @@ public class MapActivity extends Activity {
 					new LatLng(ariaViewDate.getNorth(), ariaViewDate.getEast())); // North
 																					// east
 																					// corner
-
+			//Overlay for display Main Image
 			GroundOverlayOptions newarkMap = new GroundOverlayOptions()
 					.image(BitmapDescriptorFactory.fromPath(pngIcon
 							.getAbsolutePath())).positionFromBounds(
@@ -264,6 +272,7 @@ public class MapActivity extends Activity {
 
 	}
 
+	//Increment on Date of current day
 	public void incrementDate(View v) {
 		if (ariaViewDate.getCurrentAriaViewDateTerm() + 1 < ariaViewDate
 				.getListAriaViewDateTerm().size()) {
@@ -274,6 +283,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//Decrement on Date of current day
 	public void decrementDate(View v) {
 		if (ariaViewDate.getCurrentAriaViewDateTerm() > 0) {
 			ariaViewDate.setCurrentAriaViewDateTerm(ariaViewDate
@@ -283,6 +293,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//Increment on Date of current day every 2 seconds
 	public void play(View v) {
 
 		if (!inPlay) {
@@ -343,6 +354,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//Dialog for change Site
 	private void dialogSite(String[] tabStringSite) {
 
 		AlertDialog.Builder builder = new Builder(this);
@@ -362,6 +374,7 @@ public class MapActivity extends Activity {
 
 	}
 
+	//Dialog for change Date
 	private void dialogDates(ArrayList<String> listDate) {
 
 		String[] tabStringDate = listDate.toArray(new String[listDate.size()]);
@@ -384,6 +397,7 @@ public class MapActivity extends Activity {
 
 	}
 
+	//Dialog for change Polluant
 	private void dialogPolluant(ArrayList<String> listPolluant) {
 
 		String[] tabStringPolluant = listPolluant
@@ -408,11 +422,13 @@ public class MapActivity extends Activity {
 
 	}
 
+	//Execute post request for data of new site
 	private void post(int currentSite, int currentDate) {
 
 		String[] sitesTab = ariaViewDate.getSitesTabString();
 		String choiceSite = sitesTab[currentSite];
 
+		//List of "GET" values
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("login", ariaViewDate
 				.getLogin()));
@@ -423,11 +439,12 @@ public class MapActivity extends Activity {
 		File fileXML = new File(ariaDirectory, "login2.xml");
 
 		try {
-
+			//Post Request on "infosite" web service
 			PostTask postTask = new PostTask(MapActivity.this, nameValuePairs,
 					"login2.xml");
 			postTask.execute(url_ws_infosite).get();
 
+			//Parse XML
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			document = documentBuilder.parse(fileXML);
 
@@ -449,7 +466,7 @@ public class MapActivity extends Activity {
 					.getTextContent();
 
 			
-			
+			//Download xml file
 			DownloadTask downloadTaskDateFile = new DownloadTask(
 					MapActivity.this);
 			downloadTaskDateFile.execute(
@@ -460,6 +477,7 @@ public class MapActivity extends Activity {
 
 			Document documentDateFile = documentBuilder.parse(fileXML);
 
+			//Lsit of date
 			NodeList dateNodeList = documentDateFile
 					.getElementsByTagName("name");
 
@@ -469,6 +487,8 @@ public class MapActivity extends Activity {
 				listDate.add(((Element) dateNodeList.item(i)).getTextContent());
 			}
 
+
+			//Get current if possible else get last Date (newest)
 			String date = "";
 			if (currentDate == -1) {
 				date = listDate.get(listDate.size() - 1);
@@ -476,6 +496,7 @@ public class MapActivity extends Activity {
 			} else
 				date = listDate.get(currentDate);
 
+			//Download kml file of last date 
 			DownloadTask downloadTaskKml = new DownloadTask(MapActivity.this);
 			downloadTaskKml.execute(
 					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
@@ -489,6 +510,7 @@ public class MapActivity extends Activity {
 							.get(0).getValue(), nameValuePairs.get(1)
 							.getValue());
 
+			//fill intent
 			Intent intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
 			intent.putExtra("model", model);
@@ -512,6 +534,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//place marker on google map
 	private void placeMarker() {
 
 		currennt_nb_marker = 0;
@@ -534,8 +557,10 @@ public class MapActivity extends Activity {
 
 	}
 
+	//Get position of marker and use "extract" web service
 	private void getExtract() {
 	
+		//if marker is set
 		if (marker != null) {
 			double latitude = marker.getPosition().latitude;
 			double longitude = marker.getPosition().longitude;
@@ -555,7 +580,7 @@ public class MapActivity extends Activity {
 					.get(ariaViewDate.getListAriaViewDateTerm().size()-1)
 					.getEndTimeSpan();
 
-			//
+			//get proper date
 			startdate = startdate.replace("T", " ").substring(0,
 					startdate.length() - 6);
 			enddate = enddate.replace("T", " ").substring(0,
@@ -564,6 +589,8 @@ public class MapActivity extends Activity {
 			// url_ws_extract
 			if (domainid != null && variableid != null && startdate != null
 					&& enddate != null) {
+				
+				//List of "GET" values
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						6);
 				nameValuePairs.add(new BasicNameValuePair("longitude", Double
@@ -583,11 +610,12 @@ public class MapActivity extends Activity {
 				PostTask postTask = new PostTask(MapActivity.this,
 						nameValuePairs, "extract.json");
 				try {
+					//Execute Post request
 					postTask.execute(url_ws_extract).get();
 
 					String contentsJson = readFile(fileJSON);
 					
-						
+					//parse json, get data for GraphView activity	
 					if(!contentsJson.contentEquals("Exception null"))
 					{
 						parseJsonData(contentsJson);
@@ -600,6 +628,7 @@ public class MapActivity extends Activity {
 							dataValuesFieldValue[i] = dataValuesFieldListValue.get(i);
 						}
 						
+						//fill intent
 						Intent intent = new Intent(this, GraphViewActivity.class);
 						intent.putExtra("dataValuesFieldMapKey", dataValuesFieldKey);
 						intent.putExtra("dataValuesFieldMapValue", dataValuesFieldValue);
@@ -632,6 +661,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
+	//parse json and fill two array (values of hour and values of value polluant)
 	public void parseJsonData(String json) {
 		JsonParser parser = new JsonParser();
 		
@@ -659,6 +689,7 @@ public class MapActivity extends Activity {
 		
 	}
 
+	//read content of file
 	public static String readFile(File file) throws IOException {
 		int len;
 		char[] chr = new char[4096];

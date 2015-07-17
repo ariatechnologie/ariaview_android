@@ -10,13 +10,13 @@ public class PlayTask extends AsyncTask<String, String, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		publishProgress("+1");
+		publishProgress("+1"); //call onProgressUpdate
 		return "END";
 	}
 
 	@Override
 	protected void onProgressUpdate(String... values) {
-		mButton.performClick();
+		mButton.performClick(); //perform click on mButton
 
 	}
 

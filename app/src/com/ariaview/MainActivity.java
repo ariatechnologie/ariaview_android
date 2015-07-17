@@ -86,7 +86,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		//Get Language
 		 if(getIntent().hasExtra("locale")){
 				Resources res = MainActivity.this.getResources();
 				// Change locale settings in the app.
@@ -111,11 +112,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void init(){
+		//create AriaView Directory
 		ariaDirectory = new File(getFilesDir(), "AriaView");
 		ariaDirectory.mkdirs();
 
 		documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
+		//Get User and fill element, if User empty ("remember me") was not checked
 		ariaViewBDD = new AriaViewBDD(this);
 		ariaViewBDD.open();
 		listUser = ariaViewBDD.getUser();
@@ -151,7 +154,7 @@ public class MainActivity extends Activity {
 
 		userRemember = checkBoxRemember.isChecked();
 
-		// SEND LOGIN 1
+		// SEND LOGIN 1, List for "GET" values
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("login", loginEditText
 				.getText().toString()));
@@ -166,12 +169,14 @@ public class MainActivity extends Activity {
 					login1XML);
 			postTask.execute(url_ws_login).get();
 
+			//Parse XML, get list of site
 			if (fileXML.isFile()) {
 				documentBuilder = documentBuilderFactory.newDocumentBuilder();
 				document = documentBuilder.parse(fileXML);
 
 				sitesNodeList = document.getElementsByTagName("site");
 
+				//fill array sites
 				sitesTabString = new String[sitesNodeList.getLength()];
 				for (int i = 0; sitesNodeList.getLength() > i; i++) {
 					sitesTabString[i] = sitesNodeList.item(i).getTextContent();
@@ -206,6 +211,7 @@ public class MainActivity extends Activity {
 
 	}
 
+	//Dialog show site
 	private void dialogSite(String[] tabStringSite) {
 
 		AlertDialog.Builder builder = new Builder(this).setTitle(
@@ -224,6 +230,7 @@ public class MainActivity extends Activity {
 
 	}
 
+	//Authen. Use Web Service and parse XML, go to MapActivity
 	private void authen(int currentSite) {
 
 		String choiceSite = sitesTabString[currentSite];
@@ -252,6 +259,7 @@ public class MainActivity extends Activity {
 
 		ariaViewBDD.close();
 
+		//List for "GET" values
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("login", loginEditText
 				.getText().toString()));
@@ -261,6 +269,7 @@ public class MainActivity extends Activity {
 
 		File fileXML = new File(ariaDirectory, login2XML);
 
+		//parse XML and fill ariaViewDate object
 		try {
 
 			PostTask postTask = new PostTask(MainActivity.this, nameValuePairs,
@@ -286,7 +295,7 @@ public class MainActivity extends Activity {
 			String nest =  document.getElementsByTagName("nest").item(0)
 					.getTextContent();
 			
-			
+			//use of 2nd web service
 			DownloadTask downloadTaskDateFile = new DownloadTask(
 					MainActivity.this);
 			downloadTaskDateFile.execute(
@@ -297,6 +306,7 @@ public class MainActivity extends Activity {
 
 			Document documentDateFile = documentBuilder.parse(fileXML);
 
+			//List date
 			NodeList dateNodeList = documentDateFile
 					.getElementsByTagName("name");
 
@@ -306,8 +316,10 @@ public class MainActivity extends Activity {
 				listDate.add(((Element) dateNodeList.item(i)).getTextContent());
 			}
 
+			//Get last Date (newest)
 			String lastDate = listDate.get(listDate.size() - 1);
 
+			//Download kml file of last date 
 			DownloadTask downloadTaskKml = new DownloadTask(MainActivity.this);
 			downloadTaskKml.execute(
 					host + "/" + url + "/" + site + "/GEARTH/" + type + "_"
@@ -322,6 +334,7 @@ public class MainActivity extends Activity {
 							.get(0).getValue(), nameValuePairs.get(1)
 							.getValue());
 
+			//fill intent
 			intent = new Intent(this, MapActivity.class);
 			intent.putExtra("AriaViewDate", ariaViewDate);
 			intent.putExtra("model", model);
@@ -425,6 +438,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	//Dialog for change language
 	private void dialogLanguage() {
 
 		ListAdapter adapter = new ArrayAdapter<Item>(

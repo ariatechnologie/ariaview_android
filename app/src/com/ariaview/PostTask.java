@@ -38,6 +38,7 @@ class PostTask extends AsyncTask<String, Integer, String> {
         this.namefile = namefile;
     }
 
+    //Execute request and save file on AriaView directory
     @Override
     protected String doInBackground(String... sUrl) {
         InputStream input = null;
@@ -96,6 +97,7 @@ class PostTask extends AsyncTask<String, Integer, String> {
         return null;
     }
     
+    //return "GET" params
     private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
     {
         StringBuilder result = new StringBuilder();
