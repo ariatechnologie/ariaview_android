@@ -1,3 +1,8 @@
+/*
+ * @author Oneltone Da Silva
+ * @version 1 
+ */
+
 package com.ariaview;
 
 import java.io.BufferedReader;

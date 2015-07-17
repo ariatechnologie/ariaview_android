@@ -1,3 +1,8 @@
+/*
+ * @author Oneltone Da Silva
+ * @version 1 
+ */
+
 package modele;
 
 import java.io.Serializable;
